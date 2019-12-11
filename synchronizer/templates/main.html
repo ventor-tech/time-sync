@@ -1,0 +1,19 @@
+{% extends "common/index.html" %} {% block content %}
+<div class="container mt-4">
+	<div class="card">
+		<div class="card-header">
+			Synchronization
+		</div>
+		<div class="card-body">
+			<h4 class="card-title">Run synchronization</h4>
+			{% if current_user.get_days_from_sync() == 0 %}
+				<p class="card-text">You sync worklogs less than a day ago.</p>
+			{% else %}
+				<p class="card-text">You sync worklogs {{current_user.get_days_from_sync()}} days ago.</p>
+			{% endif %}
+			<a href="/sync" class="btn btn-primary">Synchronize now</a>
+			<a href="/help" class="btn btn-outline-secondary">View help</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

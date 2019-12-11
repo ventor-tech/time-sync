@@ -1,0 +1,61 @@
+{% extends "common/index.html" %} 
+{% set active_page = "worklogs" %}
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card">
+        <div class="card-header">
+            Worklogs
+        </div>
+        <div class="card-body">
+            {% if worklogs %}  
+            <p class="lead">We successfully synchronized your worklogs</p>     
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Comment</th>
+                        <th>Started</th>
+                        <th>Stopped</th>
+                        <th>Duration</th>
+                        <th>Issue ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for worklog in worklogs %}
+                    <tr class="{% if worklog.is_valid %} table-success {% else %} table-danger {% endif %}">
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{worklog.comment}}</td>
+                        <td>{{worklog.date_started}}</td>
+                        <td>{{worklog.date_stopped}}</td>
+                        <td>{{worklog.duration}}</td>
+                        <td>{{worklog.issue_id}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4"><b>Total synchronized</b></td>
+                        <td colspan="0">
+                            <b>
+                               {{seconds_to_hours(total_synchronized)}}h
+                            </b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><b>Total skipped</b></td>
+                        <td colspan="0">
+                            <b>
+                               {{seconds_to_hours(total_skipped)}}h
+                            </b>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>     
+            {% else %}
+                <p class="card-text">No worklogs were synchronized.</p>
+            {% endif %}
+        </div>
+    </div>
+    <a class="btn btn-outline-primary mt-4" href="/sync">Synchronize again</a>
+</div>
+{% endblock %}

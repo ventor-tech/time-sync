@@ -1,0 +1,36 @@
+{% extends "common/index.html" %} 
+{% set active_page = "connectors" %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Connectors</h1>
+    {% if connectors %}
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Type</th>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for connector in connectors %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{connector.name}}</td>
+                <td>{{connector.connector_type}}</td>
+                <td class="text-center">
+                    <a href="/connector/delete/{{connector.get_id()}}">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h2>You have no added connectors</h2>
+    {% endif %}
+    <a class="btn btn-outline-primary mt-4" href="/connector/add">Add a new one</a>
+</div>
+{% endblock %}

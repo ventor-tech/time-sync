@@ -1,0 +1,22 @@
+.center-both {
+    position:absolute;
+	top:calc(40% + 55px);
+	left:50%;
+	transform:translate(-50%,-40%);
+	min-width: 300px;
+	padding-bottom: 10px;
+}
+
+.oauth-provider-logo {
+	height: 25px;
+	margin-left: 3px;
+}
+
+
+/* HELP */
+.help-image {
+	display: block;
+	max-width: 90%;
+	margin: 1rem auto;
+	border: 1px solid #ddd;
+}

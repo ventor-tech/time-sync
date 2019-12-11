@@ -1,0 +1,117 @@
+{% extends "common/index.html" %} 
+{% set active_page = "worklogs" %}
+{% block content %}
+<div class="container mt-4 mb-4">
+    <h1>Gitlab Reporting</h1>
+    <p class="lead">Simple spended time Gitlab reporting</p>
+
+    {% if form %} 
+    <form class="row mb-4" method="POST" action="/gitlab-reporting">
+        {{ form.csrf_token }}
+        <div class="col-md-6 form-group {% if form.date_started.errors %}is-invalid{% endif %}">
+            <label for="target">Start date</label>
+            <div class="input-group date" id="date_started" data-target-input="nearest">
+                {% if form.date_started.errors %}
+                    {{ form.date_started(class="form-control is-invalid") }}
+                    <span class="input-group-addon is-invalid" data-target="#date_started" data-toggle="datetimepicker">
+                        <span class="fa fa-calendar"></span>
+                    </span>
+                {% else %}
+                    {{ form.date_started(**{
+                        "class": "form-control datetimepicker-input",
+                        "data-target": "#date_started"
+                    }) }}
+                    <span class="input-group-addon" data-target="#date_started" data-toggle="datetimepicker">
+                        <span class="fa fa-calendar"></span>
+                    </span>
+                {% endif %}
+            </div>
+            {% for error in form.date_started.errors %}
+                <div class="invalid-feedback" style="display:block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group {% if form.date_ended.errors %}is-invalid{% endif %}">
+                <label for="target">End date</label>
+                <div class="input-group date" id="date_ended" data-target-input="nearest">
+                    {% if form.date_ended.errors %}
+                        {{ form.date_ended(class="form-control is-invalid") }}
+                        <span class="input-group-addon is-invalid" data-target="#date_ended" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    {% else %}
+                        {{ form.date_ended(**{
+                            "class": "form-control datetimepicker-input",
+                            "data-target": "#date_ended"
+                        }) }}
+                        <span class="input-group-addon" data-target="#date_ended" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    {% endif %}
+                </div>
+                {% for error in form.date_ended.errors %}
+                    <div class="invalid-feedback" style="display:block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+        <button type="submit" class="btn btn-primary d-block mx-auto">Show</button>
+    </form>
+    {% endif %}
+
+
+    <div class="card">
+        <div class="card-header">
+            Worklogs
+        </div>
+        <div class="card-body">
+            {% if worklogs %}
+                {% for user, user_data in worklogs.items() %}
+                <h2 class="mb-3">{{user}}</h2>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <!-- <th>Comment</th> -->
+                            <th>Started</th>
+                            <th>Stopped</th>
+                            <th>Duration</th>
+                            <th>Project/Issue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for worklog in user_data.worklogs %}
+                        <tr class="">
+                            <th scope="row">{{loop.index}}</th>
+                            <!-- <td>{{worklog.comment}}</td> -->
+                            <td>{{worklog.date_started}}</td>
+                            <td>{{worklog.date_stopped}}</td>
+                            <td>{{seconds_to_time(worklog.duration)}}</td>
+                            <td>
+                                <a href="{{worklog.issue_url}}" target="_blank">
+                                    {{worklog.project_name}}#{{worklog.issue_id}}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><b>Total: </b></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2">
+                                <b>
+                                    {{seconds_to_time(user_data.total)}} | {{seconds_to_hours(user_data.total)}}h
+                                </b>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                {% endfor %}
+            {% else %}
+                <p class="card-text">You have no worklogs in Gitlab for period.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

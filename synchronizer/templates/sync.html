@@ -1,0 +1,67 @@
+{% extends "common/index.html" %} {% block content %}
+<div class="container">
+	<div class="mx-auto mt-4 col-sm-6 text-left">
+        <h1>Synchronize worklogs</h1>
+        <p class="lead"><b>Your last sync:</b> {{current_user.date_last_sync.strftime("%B %d, %Y") }}</p>
+        
+        {% if errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ errors|safe }}
+            </div>
+        {% endif %}
+        
+        {% if form %} 
+            <form class="row" method="POST" action="/sync">
+                {{ form.csrf_token }}
+                <div class="col-md-6 form-group {% if form.source.errors %}is-invalid{% endif %}">
+                    <label for="source">Source</label>
+                    {% if form.source.errors %}
+                        {{ form.source(class="form-control is-invalid") }}
+                        {% for error in form.source.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.source(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="col-md-6 form-group {% if form.target.errors %}is-invalid{% endif %}">
+                    <label for="target">Target</label>
+                    {% if form.target.errors %}
+                        {{ form.target(class="form-control is-invalid") }}
+                        {% for error in form.target.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.target(class="form-control") }}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 form-group {% if form.source.errors %}is-invalid{% endif %}">
+                    <label for="target">Date to start from</label>
+                    <div class="input-group date" id="date_started_from" data-target-input="nearest">
+                        {% if form.date_started_from.errors %}
+                            {{ form.date_started_from(class="form-control is-invalid") }}
+                            <span class="input-group-addon is-invalid" data-target="#date_started_from" data-toggle="datetimepicker">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        {% else %}
+                            {{ form.date_started_from(**{
+                                "class": "form-control datetimepicker-input",
+                                "data-target": "#date_started_from"
+                            }) }}
+                            <span class="input-group-addon" data-target="#date_started_from" data-toggle="datetimepicker">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% for error in form.date_started_from.errors %}
+                        <div class="invalid-feedback" style="display:block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                            
+                <button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
+            </form>
+        {% endif %}
+	</div>
+</div>
+{% endblock %}

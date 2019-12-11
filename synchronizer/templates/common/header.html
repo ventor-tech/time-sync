@@ -1,0 +1,38 @@
+{% set navigation_bar = [
+  ('/worklogs', 'worklogs', 'Worklogs'),
+  ('/synchronizations', 'synchronizations', 'Synchronizations'),
+  ('/connectors', 'connectors', 'Connectors'),
+] %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo01"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarToggler">
+    <a class="navbar-brand" href="/">{{ 'Dev' if config['DEV'] else ''}} Synchronizer</a>
+    {% if current_user.is_authenticated %}
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      {% for href, id, title in navigation_bar %}
+        <li class="nav-item">
+          <a class="nav-link {% if id==active_page %}active{% endif %}" href="{{href}}">
+            {{title}}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ current_user.username }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/settings">Setting</a>
+          <a class="dropdown-item" href="/help">Help</a>
+          <a class="dropdown-item" href="/sign-out">Sign out</a>
+        </div>
+      </li>
+    </ul>
+    {% endif %}
+  </div>
+</nav>

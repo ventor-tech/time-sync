@@ -1,0 +1,181 @@
+{% extends "common/index.html" %} {% block content %}
+<div class="container mt-4 mb-4">
+
+    <h1 class="page-header">Quick start guide</h1>
+
+    <p class="lead">
+        This guide will help you to synchronize your worklogs first time.
+        We will synchronize worklogs from Toggl to JIRA step-by-step.
+    </p>
+
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header bg-white" id="headingOne">
+                <h5 class="mb-0">
+                    <a href="" data-toggle="collapse" data-target="#c0" aria-expanded="true" aria-controls="c0">
+                        0. Prepare to synchronization
+                    </a>
+                </h5>
+            </div>
+
+            <div id="c0" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <p>
+                        In order to synchronize your worklogs from Toggl you need fill descriptions
+                        of worklogs in specific format:
+
+                        <pre><code>[jira:TIMESYNC-8] Do not require connector name in case one target source
+[TIMESYNC-8] Do not require connector name in case one target source *</code></pre>
+
+                        <i>* Valid when <b>Default Target</b> is specified. For details check chapter 3.</i>
+
+                        <br><br>
+
+                        Toggl worklogs that have a different format will not be synchronized!
+
+                        We will synchronize the following Toggl worklogs:
+
+                        <img src="/static/images/help/screen0.png" class="help-image" />
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1 -->
+
+        <div class="card">
+            <div class="card-header bg-white" id="headingTwo">
+                <h5 class="mb-0">
+                    <a href="#" class="collapsed" data-toggle="collapse" data-target="#c1" aria-expanded="false"
+                        aria-controls="c1">
+                        1. Create source and target connectors
+                    </a>
+                </h5>
+            </div>
+            <div id="c1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <p>
+                        To synchronize worklogs we need at least two connectors:
+                        <ul>
+                            <li>Source connector</li>
+                            <li>Target connector</li>
+                        </ul>
+                    </p>
+
+                    <p>
+                        Click to <b>Connectors</b> button in main menu:
+                        <img src="/static/images/help/screen1.png" class="help-image" />
+
+                        Click on <b>Add a new one</b> button
+                    </p>
+
+                    <p>
+                        Fill all required fields in the following form:
+
+                        <img src="static/images/help/screen2.png" class="help-image" />
+
+                        <b>Examples</b>
+                        <ol>
+                            <li>
+                                For Toggl you need to fill fields:
+                                <ul>
+                                    <li>Connector Name</li>
+                                    <li>API Token</li>
+                                    <li>Select connector type</li>
+                                </ul>
+
+                            <li>
+                                For JIRA you need to fill fields:
+                                <ul>
+                                    <li>Connector Name</li>
+                                    <li>Server (<i>Without http/https! Example: jira.test.org</i>)</li>
+                                    <li>Login</li>
+                                    <li>Password</li>
+                                    <li>Select connector type</li>
+                                </ul>
+                            </li>
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+
+        <div class="card">
+            <div class="card-header bg-white" id="headingThree">
+                <h5 class="mb-0">
+                    <a href="#" class="collapsed" data-toggle="collapse" data-target="#c2" aria-expanded="false"
+                        aria-controls="c2">
+                        2. Configure your account
+                    </a>
+                </h5>
+            </div>
+            <div id="c2" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    <p>
+                        To configure your account click on your username in right top corner of menu.
+                        Set correct values for the following fields:
+
+                        <img src="static/images/help/screen3.png" class="help-image" />
+
+                        <b>NOTE.</b> <b>Default target</b> will simplify format of worklogs description in Toggl to:
+
+                        <pre><code>[TIMESYNC-8] Do not require connector name in case one target source</code></pre>
+
+                        In this case you can omit connector name - app will set it to <b>Default target</b> value automatically.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="card">
+            <div class="card-header bg-white" id="headingThree">
+                <h5 class="mb-0">
+                    <a href="#" class="collapsed" data-toggle="collapse" data-target="#c3" aria-expanded="false"
+                        aria-controls="c3">
+                        3. Your first synchronization
+                    </a>
+                </h5>
+            </div>
+            <div id="c3" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    <p>
+                        Click on logo or <b>Worklogs</b> menu item. Then click on <b>Synchronize now</b> button.
+
+                        You will see the following form:
+
+                        <img src="static/images/help/screen4.png" class="help-image" />
+
+                        Set your new Toggl connector as <b>Source</b> and JIRA as <b>Target</b>.
+                        Select date from which you want to synchronize worklogs. Click <b>Save</b>
+
+                        <br>
+
+                        In next page you will see table with green (valid) and red (invalid, these will not be
+                        synchronized!) worklogs.
+
+                        <img src="/static/images/help/screen5.png" class="help-image" />
+
+                        In this step you can Edit or Delete worklogs with corresponding buttons.
+
+                        <br>
+
+                        Then click <b>Save worklogs</b> button to run synchronization.
+                        In next page you will see synchronization results:
+
+                        <img src="/static/images/help/screen6.png" class="help-image" />
+
+                        Let's check that worklogs were synchronized:
+
+                        <img src="/static/images/help/screen7.png" class="help-image" />
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

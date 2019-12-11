@@ -1,0 +1,58 @@
+{% extends "common/index.html" %} {% block content %}
+<div class="container">
+	<div class="mx-auto mt-4 col-sm-6 text-left">
+		<h1>Manage your settings</h1>
+		<form method="POST" action="/settings">
+			{{ form.csrf_token }}
+			<p class="text-danger text-center">{{error}}</p>
+			<div class="form-group">
+				<label for="name">Username</label>
+				{% if form.username.errors %}
+					{{ form.username(class="form-control is-invalid", placeholder="Enter username") }}
+					{% for error in form.username.errors %}
+						<div class="invalid-feedback">{{ error }}</div>
+					{% endfor %}
+				{% else %}
+					{{ form.username(class="form-control", placeholder="Enter username") }}
+				{% endif %}
+			</div>
+			
+			<div class="form-group">
+				<label for="password">Email</label>
+				{{ form.email(class="form-control", readonly=True, placeholder="Enter email") }}
+			</div>
+
+			<div class="form-group">
+				<label for="password">Last synchronization date</label>
+				{{ form.date_last_sync(class="form-control", readonly=True, placeholder="Enter date") }}
+			</div>
+
+			<div class="form-group">
+				<label for="name">Timezone</label>
+				{% if form.timezone.errors %}
+					{{ form.timezone(class="form-control is-invalid", placeholder="Enter your timezone") }}
+					{% for error in form.timezone.errors %}
+						<div class="invalid-feedback">{{ error }}</div>
+					{% endfor %}
+				{% else %}
+					{{ form.timezone(class="form-control", placeholder="Enter your timezone") }}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+					<label for="name">Default target</label>
+					{% if form.default_target.errors %}
+						{{ form.default_targete(class="form-control is-invalid", placeholder="Select default target") }}
+						{% for error in form.default_target.errors %}
+							<div class="invalid-feedback">{{ error }}</div>
+						{% endfor %}
+					{% else %}
+						{{ form.default_target(class="form-control", placeholder="Select default target") }}
+					{% endif %}
+				</div>
+
+			<button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "common/index.html" %} 
+{% set active_page = "worklogs" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            Synchronization
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Run synchronization</h4>
+            {% if current_user.get_days_from_sync() == 0 %}
+                <p class="card-text">You sync worklogs less than a day ago.</p>
+            {% else %}
+                <p class="card-text">You sync worklogs {{current_user.get_days_from_sync()}} days ago.</p>
+            {% endif %}
+            <a href="/sync" class="btn btn-primary">Synchronize now</a>
+            <a href="/help" class="btn btn-outline-secondary">View help</a>
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="card-header">
+            {{title}}
+        </div>
+        <div class="card-body">
+            {% if worklogs %}                
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Comment</th>
+                        <th>Started</th>
+                        <th>Stopped</th>
+                        <th>Duration</th>
+                        <th>Issue ID</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for worklog in worklogs %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{worklog.comment}}</td>
+                        <td>{{local_time(worklog.date_started)}}</td>
+                        <td>{{local_time(worklog.date_stopped)}}</td>
+                        <td>{{seconds_to_time(worklog.duration)}}</td>
+                        <td>{{worklog.issue_id}}</td>
+                        <td class="text-center">
+                            <a href="/worklogs/delete/{{worklog.get_id()}}?next={{request.path}}">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>     
+            {% else %}
+                <p class="card-text">You have no worklogs synchronized.</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- <a class="btn btn-outline-primary mt-4" href="/worklog/add">Add a new one</a> -->
+</div>
+{% endblock %}

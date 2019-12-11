@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <!-- Libs -->
+    <link rel="stylesheet" href="/static/css/libs/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/libs/font-awesome.css">
+
+    <!-- Datetimepicker styles -->
+    <link rel="stylesheet" href="/static/css/libs/tempusdominus-bootstrap-4.min.css">
+
+    <!-- App -->
+    <link rel="stylesheet" href="/static/css/app.css">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body class="{{page_type}}">
+<!-- HEADER -->
+{% include 'common/header.html' %}
+<!-- /HEADER -->
+
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- LIBS -->
+<script src="/static/js/libs/jquery-2.2.2.min.js"></script>
+<script src="/static/js/libs/tether.min.js"></script><!-- Tether for Bootstrap -->
+<script src="/static/js/libs/popper.min.js"></script><!-- Popper for Bootstrap -->
+<script src="/static/js/libs/bootstrap.min.js"></script>
+<script src="/static/js/libs/moment-with-locales.min.js"></script>
+<script src="/static/js/libs/bootstrap-datetimepicker.min.js"></script>
+<!-- Datetimepicker lib -->
+<script src="/static/js/libs/tempusdominus-bootstrap-4.min.js"></script>
+
+<script src="/static/js/app.js"></script>
+
+</body>
+</html>

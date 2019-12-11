@@ -1,0 +1,42 @@
+{% extends "common/index.html" %} {% block content %}
+<div class="container">
+	<div class="mx-auto mt-4 col-sm-6 text-left">
+        <h1>{{title}}</h1>
+        {% if errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ errors|safe }}
+            </div>
+        {% endif %}
+        
+        {% if form %} 
+            <form class="row" method="POST" action="/worklogs/edit/{{worklog_id}}?next={{request.args.get('next')}}">
+                {{ form.csrf_token }}
+                <div class="col-md-12 form-group {% if form.comment.errors %}is-invalid{% endif %}">
+                    <label for="comment">Description</label>
+                    {% if form.comment.errors %}
+                        {{ form.comment(class="form-control is-invalid") }}
+                        {% for error in form.comment.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.comment(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="col-md-12 form-group {% if form.issue_id.errors %}is-invalid{% endif %}">
+                    <label for="issue_id">Issue ID</label>
+                    {% if form.issue_id.errors %}
+                        {{ form.issue_id(class="form-control is-invalid") }}
+                        {% for error in form.issue_id.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.issue_id(class="form-control") }}
+                    {% endif %}
+                </div>
+    
+                <button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
+            </form>
+        {% endif %}
+	</div>
+</div>
+{% endblock %}
