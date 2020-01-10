@@ -140,8 +140,19 @@ class Worklog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     issue_id = db.Column(db.String(32), default='')
 
+    parent_id = db.Column(
+        db.Integer,
+        db.ForeignKey('worklogs.id'),
+        nullable=True
+    )
+
     is_valid = db.Column(db.Boolean, default=True)
     user = db.relationship('User', backref='users')
+    parent = db.relationship(
+        'Worklog',
+        backref='children',
+        remote_side=[id]
+    )
 
     def __repr__(self):
         return '<Worklog %r>' % (self.comment)
@@ -183,39 +194,94 @@ class Worklog(db.Model):
         db.session.commit()
 
     @classmethod
-    def create_all(cls, sync_id, worklogs, connector_name):
+    def create_all(cls, sync_id, raw_worklogs, connector_name):
         """
         Writes a new worklogs into database
         """
-        user_id = current_user.get_id()
+        # Sort worklogs by date_started
+        raw_worklogs.sort(key=lambda rw: rw['date_started'])
 
-        for worklog in worklogs:
-            if cls.is_exists(worklog):
-                continue
-            # make a filtered copy of worklog dict to avoid errors with
-            # extra attributes
-            worklog_data = {
-                'date_started': worklog['date_started'],
-                'date_stopped': worklog['date_stopped'],
-                'date_created': worklog['date_created'],
-                'source_id': worklog['source_id'],
-                'duration': worklog['duration']
-            }
-            worklog_data['user_id'] = user_id
-            worklog_data['synchronization_id'] = sync_id
+        # Split list of worklogs to groups by date and comment
+        from collections import OrderedDict
+        grouped_worklogs = OrderedDict()
+
+        # Preprocess and group worklogs
+        for w in raw_worklogs:
             # Try to extract issue ID from comment.
             # Strip to avoid issues with trailing spaces
             issue_id, comment = cls.parse_issue_id(
-                worklog['comment'].strip(),
+                w['comment'].strip(),
                 connector_name
             )
-            worklog_data['comment'] = comment
-            worklog_data['issue_id'] = issue_id
+
+            w['issue_id'] = issue_id
+            w['comment'] = comment
             # If no issue ID - mark worklog as invalid
-            worklog_data['is_valid'] = True if issue_id else False
-            w = Worklog(**worklog_data)
-            db.session.add(w)
-            db.session.commit()
+            w['is_valid'] = True if issue_id else False
+
+            w_hash = '{date_started}-{issue_id}-{comment}'.format(
+                date_started=str(w['date_started'].date()),
+                issue_id=w['issue_id'],
+                comment=w['comment']
+            )
+
+            if w_hash in grouped_worklogs:
+                grouped_worklogs[w_hash].append(w)
+            else:
+                grouped_worklogs[w_hash] = [w]
+
+        for w_hash, worklogs in grouped_worklogs.items():
+            # No parent by default
+            parent_id = None
+
+            # Leave only new worklogs
+            new_worklogs = [w for w in worklogs if not cls.is_exists(w)]
+
+            if len(new_worklogs) > 1:
+                # Create common parent
+                parent_worklog_data = {
+                    # We sorted worklogs by date_started so use first worklog
+                    # date_started and last worklog date_stopped
+                    'date_started': new_worklogs[0]['date_started'],
+                    'date_stopped': new_worklogs[-1]['date_stopped'],
+                    'issue_id': new_worklogs[0]['issue_id'],
+                    'comment': new_worklogs[0]['comment'],
+                    'is_valid': new_worklogs[0]['is_valid'],
+                    # TODO: What value should be used?
+                    'date_created': None,
+                    # Parent worklog doesn't have source_id!
+                    'source_id': None,
+                    'duration': sum([w['duration'] for w in new_worklogs]),
+                    'user_id': current_user.get_id(),
+                    'synchronization_id': sync_id
+                }
+
+                pw = Worklog(**parent_worklog_data)
+                db.session.add(pw)
+                db.session.commit()
+
+                parent_id = pw.id
+
+            for worklog in new_worklogs:
+                # Make a filtered copy of worklog dict to avoid errors with
+                # extra attributes
+                worklog_data = {
+                    'date_started': worklog['date_started'],
+                    'date_stopped': worklog['date_stopped'],
+                    'date_created': worklog['date_created'],
+                    'issue_id': worklog['issue_id'],
+                    'comment': worklog['comment'],
+                    'is_valid': worklog['is_valid'],
+                    'source_id': worklog['source_id'],
+                    'duration': worklog['duration'],
+                    'user_id': current_user.get_id(),
+                    'synchronization_id': sync_id,
+                    'parent_id': parent_id
+                }
+                w = Worklog(**worklog_data)
+                db.session.add(w)
+                db.session.commit()
+
         return True
 
     @staticmethod
@@ -474,10 +540,13 @@ class Synchronization(db.Model):
             password=self.target.password
         )
 
-        # get all valid worklogs from this synchronization
+        # Get all valid worklogs from this synchronization
         worklogs_to_upload = Worklog.query \
-            .filter(Worklog.synchronization_id == self.get_id()) \
-            .filter(Worklog.is_valid)
+            .filter(
+                Worklog.synchronization_id == self.get_id(),
+                Worklog.is_valid,
+                Worklog.parent_id == None  # NOQA
+            )
 
         try:
             target_connector.export_worklogs(worklogs_to_upload)

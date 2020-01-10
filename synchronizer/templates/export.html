@@ -30,6 +30,19 @@
                         <td>{{worklog.duration}}</td>
                         <td>{{worklog.issue_id}}</td>
                     </tr>
+
+                    {% if worklog.children %}
+                        {% for child in worklog.children %}
+                        <tr class="">
+                            <th scope="row"></th>
+                            <td></td>
+                            <td>{{local_time(child.date_started)}}</td>
+                            <td>{{local_time(child.date_stopped)}}</td>
+                            <td>{{seconds_to_time(child.duration)}}</td>
+                            <td>{{child.issue_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
                     {% endfor %}
                 </tbody>
                 <tfoot>

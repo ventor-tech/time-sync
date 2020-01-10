@@ -137,8 +137,9 @@ def get_worklogs():
     """
     Get list of connectors
     """
-    worklogs = Worklog.query.filter_by(
-        user_id=current_user.get_id()
+    worklogs = Worklog.query.filter(
+        Worklog.user_id == current_user.get_id(),
+        Worklog.parent_id == None  # NOQA
     ).order_by(Worklog.date_started).all()
     return render_template(
         "worklogs.html",
@@ -163,6 +164,7 @@ def edit_worklog(worklog_id):
     """
     Edit worklog
     """
+    # TODO: Do not allow to edit child worklogs!
     w = Worklog.query.get(worklog_id)
 
     form = WorklogForm(obj=w)
@@ -303,8 +305,10 @@ def validate_worklogs(sync_id):
             )
         worklogs = Worklog.query.filter_by(
             synchronization_id=sync_id,
-            user_id=current_user.get_id()
+            user_id=current_user.get_id(),
+            parent_id=None
         ).order_by(Worklog.date_started).all()
+
         return render_template(
             "validation.html",
             worklogs=worklogs,
@@ -349,7 +353,8 @@ def submit_synchronization(sync_id):
         # Fetch all synchronized worklogs
         worklogs = Worklog.query.filter_by(
             synchronization_id=sync_id,
-            user_id=current_user.get_id()
+            user_id=current_user.get_id(),
+            parent_id=None
         ).order_by(Worklog.date_started).all()
         return render_template(
             "export.html",
@@ -385,7 +390,8 @@ def view_synchronization(sync_id):
         # Fetch all synchronized worklogs
         worklogs = Worklog.query.filter_by(
             synchronization_id=sync_id,
-            user_id=current_user.get_id()
+            user_id=current_user.get_id(),
+            parent_id=None
         ).order_by(Worklog.date_started).all()
         return render_template(
             "export.html",

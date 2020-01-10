@@ -25,7 +25,7 @@ class ProdConfiguration(object):
     OAUTH_CREDENTIALS = {
         'google': {
             'id': os.environ.get('GOOGLE_OAUTH_ID'),
-            'secret' os.environ.get('GOOGLE_OAUTH_SECRET')
+            'secret': os.environ.get('GOOGLE_OAUTH_SECRET')
         }
     }
 

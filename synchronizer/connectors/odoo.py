@@ -88,8 +88,6 @@ class OdooConnector(BaseConnector):
                     'account_id': account_id
                 })
 
-                # import pdb; pdb.set_trace()
-
                 new_timesheet_id = self._api(
                     'create',
                     'hr.analytic.timesheet',
