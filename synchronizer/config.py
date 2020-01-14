@@ -1,5 +1,11 @@
 import os
 
+from dotenv import load_dotenv
+
+
+# Load secure configuration parameters
+load_dotenv()
+
 
 class Configuration(object):
     """
