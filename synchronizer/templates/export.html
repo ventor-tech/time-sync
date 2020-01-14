@@ -25,9 +25,9 @@
                     <tr class="{% if worklog.is_valid %} table-success {% else %} table-danger {% endif %}">
                         <th scope="row">{{loop.index}}</th>
                         <td>{{worklog.comment}}</td>
-                        <td>{{worklog.date_started}}</td>
-                        <td>{{worklog.date_stopped}}</td>
-                        <td>{{worklog.duration}}</td>
+                        <td>{{local_time(worklog.date_started)}}</td>
+                        <td>{{local_time(worklog.date_stopped)}}</td>
+                        <td>{{seconds_to_time(worklog.duration)}}</td>
                         <td>{{worklog.issue_id}}</td>
                     </tr>
 
