@@ -136,7 +136,7 @@ class Worklog(db.Model):
         default=datetime.now()
     )
     duration = db.Column(db.Integer)
-    comment = db.Column(db.String(500))
+    comment = db.Column(db.String(2000))
     source_id = db.Column(db.String(128))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     issue_id = db.Column(db.String(32), default='')
