@@ -2,7 +2,14 @@
 <div class="container">
 	<div class="mx-auto mt-4 col-sm-6 text-left">
         <h1>Synchronize worklogs</h1>
-        <p class="lead"><b>Your last sync:</b> {{current_user.date_last_sync.strftime("%B %d, %Y") }}</p>
+        <p class="lead">
+            <b>Your last sync:</b>
+            {% if current_user.date_last_sync %}
+                {{current_user.date_last_sync.strftime("%B %d, %Y") }}
+            {% else %}
+                You never synchronized your worklogs
+            {% endif %}
+        </p>
         
         {% if errors %}
             <div class="alert alert-danger" role="alert">

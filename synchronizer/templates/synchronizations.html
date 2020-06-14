@@ -8,7 +8,9 @@
         </div>
         <div class="card-body">
             <h4 class="card-title">Run synchronization</h4>
-            {% if current_user.get_days_from_sync() == 0 %}
+            {% if not current_user.date_last_sync %}
+				<p class="card-text">You never synchronized your worklogs.</p>
+            {% elif current_user.get_days_from_sync() == 0 %}
                 <p class="card-text">You sync worklogs less than a day ago.</p>
             {% else %}
                 <p class="card-text">You sync worklogs {{current_user.get_days_from_sync()}} days ago.</p>

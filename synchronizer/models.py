@@ -29,8 +29,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64))
     email = db.Column(db.String(120))
     date_last_sync = db.Column(
-        db.DateTime(timezone=True),
-        default=datetime.utcfromtimestamp(0)
+        db.DateTime(timezone=True)
     )
     date_created = db.Column(
         db.DateTime(timezone=True),
@@ -94,10 +93,12 @@ class User(db.Model, UserMixin):
         """
         Returns number of days after last sync
         """
-        return (
-            DateAndTime(current_user.timezone.name).now()
-            - current_user.date_last_sync
-        ).days
+        if current_user.date_last_sync:
+            return (
+                DateAndTime(current_user.timezone.name).now()
+                - current_user.date_last_sync
+            ).days
+        return None
 
 
 class Timezone(db.Model):
