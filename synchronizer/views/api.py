@@ -55,6 +55,9 @@ def issues():
             for r in raw_results
         ]
     except:
+        pass
+
+    if not results:
         results = [{'id': term, 'text': 'Use "{}" as issue ID'.format(term)}]
 
     return jsonify({'results': results})
