@@ -11,6 +11,7 @@
         {% if form %} 
             <form class="row" method="POST" action="/worklogs/edit/{{worklog_id}}?next={{request.args.get('next')}}">
                 {{ form.csrf_token }}
+                {{ form.sync_id(class="form-control") }}
                 <div class="col-md-12 form-group {% if form.comment.errors %}is-invalid{% endif %}">
                     <label for="comment">Description</label>
                     {% if form.comment.errors %}

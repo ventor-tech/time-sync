@@ -1,9 +1,24 @@
-$(function() {
-    $('#date_started_from, #date_started, #date_ended').datetimepicker({
-        format: "YYYY-MM-DD HH:mm:ss",
-        defaultDate: (new Date()).setHours(0,0,0,0),
-        widgetPositioning: {
-            vertical: 'bottom'
-        }
+$(function () {
+    $('#date_started_from, #date_started, #date_ended').datepicker({
+        format: "yyyy-mm-dd",
+        orientation: 'bottom'
+    }).datepicker('setDate', 'now');
+
+    // Select2 AJAX for issue field
+    $('#issue_id').select2({
+        placeholder: 'Start typing...',
+        ajax: {
+            url: '/api/issues',
+            dataType: 'json',
+            method: 'GET',
+            data: function (params) {
+                let query = {
+                    term: params.term,
+                    sync_id: $(this).closest('form').find('#sync_id').val()
+                }
+                return query;
+            }
+        },
+        minimumInputLength: 3
     });
 });

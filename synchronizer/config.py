@@ -25,7 +25,7 @@ class ProdConfiguration(object):
     DEV = False
     DEBUG = False
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@db/time'  # NOQA
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'  # NOQA
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     OAUTH_CREDENTIALS = {

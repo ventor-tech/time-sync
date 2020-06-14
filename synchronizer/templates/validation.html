@@ -18,8 +18,7 @@
                         <th>Stopped</th>
                         <th>Duration</th>
                         <th>Issue ID</th>
-                        <th>
-                            </td>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,12 +31,8 @@
                         <td>{{seconds_to_time(worklog.duration)}}</td>
                         <td>{{worklog.issue_id}}</td>
                         <td class="text-center">
-                            <a href="/worklogs/edit/{{worklog.get_id()}}?next={{request.path}}">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
-                            <a href="/worklogs/delete/{{worklog.get_id()}}?next={{request.path}}">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
+                            <a href="/worklogs/edit/{{worklog.get_id()}}?next={{request.path}}"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+                            <a href="/worklogs/delete/{{worklog.get_id()}}?next={{request.path}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         </td>
                     </tr>
 

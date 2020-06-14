@@ -169,6 +169,9 @@ def edit_worklog(worklog_id):
 
     form = WorklogForm(obj=w)
 
+    form.sync_id.data = w.synchronization.id
+    form.issue_id.choices = [(w.issue_id, w.issue_id)]
+
     if form.validate_on_submit():
         # Save a new synchronization
         w.comment = form.comment.data

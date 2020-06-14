@@ -24,6 +24,7 @@ def create_app(dev=False):
         )
 
     from synchronizer.models import lm, db, migrate
+
     db.init_app(app)
     migrate.init_app(app, db)
 
@@ -59,8 +60,10 @@ def create_app(dev=False):
 
     from synchronizer.views.app import app_routes
     from synchronizer.views.auth import auth_routes
+    from synchronizer.views.api import api_routes
 
     app.register_blueprint(app_routes)
     app.register_blueprint(auth_routes)
+    app.register_blueprint(api_routes, url_prefix='/api')
 
     return app

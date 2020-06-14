@@ -17,7 +17,7 @@ class ConnectorManager(object):
     @staticmethod
     def create_connector(connector_name, **kwargs):
         for connector in ConnectorManager.CONNECTORS:
-            if connector.NAME == connector_name:
+            if connector.NAME.lower() == connector_name.lower():
                 return connector(**kwargs)
         raise NotImplementedError(
             'Connecter with name {} is not implemented'.format(connector_name)

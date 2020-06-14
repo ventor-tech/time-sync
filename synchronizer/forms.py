@@ -1,6 +1,6 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import DateTimeField
+from wtforms import DateTimeField, TextAreaField, SelectField, validators, HiddenField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.ext.sqlalchemy.orm import model_form
 
@@ -13,7 +13,8 @@ class SyncForm(FlaskForm):
     def enabled_connectors():
         return Connector.query.filter_by(user_id=current_user.get_id())
 
-    date_started_from = DateTimeField()
+    date_started_from = DateTimeField(format='%Y-%m-%d')
+
     source = QuerySelectField(
         query_factory=enabled_connectors.__func__,
         allow_blank=True
@@ -24,12 +25,16 @@ class SyncForm(FlaskForm):
     )
 
 
-class GitlabReportingForm(FlaskForm):
-    date_started = DateTimeField()
-    date_ended = DateTimeField()
+class WorklogForm(FlaskForm):
+    id = HiddenField()
+    sync_id = HiddenField()
+    comment = TextAreaField(render_kw={'rows': 3})
+    issue_id = SelectField(
+        [validators.Required()],
+        choices=[],
+        validate_choice=False,
+        render_kw={"placeholder": "Start typing..."})
 
-
-WorklogForm = model_form(Worklog, base_class=FlaskForm, db_session=db.session)
 
 UserForm = model_form(User, base_class=FlaskForm, db_session=db.session)
 

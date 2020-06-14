@@ -44,3 +44,14 @@ class BaseConnector(object):
         if isinstance(date_iso_str, str):
             return iso8601.parse_date(date_iso_str)
         return date_iso_str
+
+    def search_issues(self, term):
+        """
+        Returns list of issue tuples like 
+        [
+            (issue_id_1, issue_name_1),
+            (issue_id_2, issue_name_2),
+            ...
+        ]
+        """
+        raise NotImplementedError()

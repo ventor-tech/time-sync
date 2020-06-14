@@ -1,3 +1,4 @@
+import re
 import requests
 from .base import BaseConnector, WrongIssueIDException
 
@@ -81,3 +82,30 @@ class JiraConnector(BaseConnector):
         Converts date to JIRA datetime format
         """
         return datetime_to_convert.strftime('%Y-%m-%dT%H:%M:%S.000%z')
+
+    def search_issues(self, term):
+        """
+        Returns list of issue tuples like 
+        [
+            (issue_id_1, issue_name_1),
+            (issue_id_2, issue_name_2),
+            ...
+        ]
+        """
+        search_condition = 'summary ~ "{0}"'
+
+        # If possible match with issue keys append additional condition
+        if re.search(r'(?:\s|^)([A-Z]+-[0-9]+)(?=\s|$)', term.upper()):
+            search_condition += ' OR id = "{0}"'
+
+        res = self._get(
+            'search',
+            params={
+                'jql':  search_condition.format(term),
+                'fields': ['summary']})
+
+        results = [
+            {'id': i['key'], 'name': i['fields']['summary']}
+            for i in res['issues']
+        ]
+        return results
