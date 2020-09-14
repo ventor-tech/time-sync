@@ -16,7 +16,7 @@ class TogglConnector(BaseConnector):
     def _api(self, method, endpoint, data=None, params=None):
         response = requests.request(
             method,
-            'https://www.toggl.com/api/v8/{0}'.format(endpoint),
+            'https://api.track.toggl.com/api/v8/{0}'.format(endpoint),
             json=data,
             auth=self.auth,
             params=params
