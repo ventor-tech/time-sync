@@ -265,6 +265,8 @@ def run_sync():
             user_id=current_user.get_id()
         )
         new_sync.import_worklogs()
+        new_sync.validate_worklogs_in_jira()
+
         return redirect(
             url_for(
                 "app_routes.validate_worklogs",

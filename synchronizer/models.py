@@ -1,11 +1,12 @@
 import re
 from datetime import datetime
 
+from flask import current_app
 from flask_login import UserMixin, current_user, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from synchronizer.connectors.base import ExportException
+from synchronizer.connectors.base import ExportException, WrongIssueIDException
 from synchronizer.connectors.manager import ConnectorManager
 from synchronizer.utils import DateAndTime
 
@@ -140,6 +141,7 @@ class Worklog(db.Model):
     source_id = db.Column(db.String(128))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     issue_id = db.Column(db.String(32), default='')
+    correct_id = db.Column(db.Boolean, default=None)
 
     parent_id = db.Column(
         db.Integer,
@@ -497,6 +499,53 @@ class Synchronization(db.Model):
             db.session.delete(s)
             db.session.commit()
         return True
+    
+    def validate_worklogs_in_jira(self):
+        """
+        Check existing worklog's task id in target resource
+        """
+        target_name = self.target.connector_type.name
+        target_connector = ConnectorManager.create_connector(
+            target_name,
+            server=self.target.server,
+            api_token=self.target.api_token,
+            login=self.target.login,
+            password=self.target.password
+        )
+
+        # Get all valid worklogs from this synchronization
+        imported_worklogs = Worklog.query \
+            .filter(
+                Worklog.synchronization_id == self.get_id(),
+                Worklog.is_valid,
+                Worklog.parent_id == None  # NOQA
+            )
+
+        for worklog in imported_worklogs:
+            try:
+                data = {
+                    'started': target_connector.convert_datetime(worklog.date_started),
+                    'timeSpentSeconds': target_connector.round_seconds(
+                        worklog.duration
+                    ),
+                    'comment': worklog.comment
+                }
+
+                target_connector._get(
+                    'issue/{0}/worklog'.format(worklog.issue_id),
+                    data,
+                    params={'notifyUsers': 'false'}
+                )
+            except WrongIssueIDException as err:
+                current_app.logger.warning('Wrong issue id in jira.')
+                worklog.correct_id = False
+                db.session.add(worklog)
+                db.session.commit()
+                continue
+
+            worklog.correct_id = True
+            db.session.add(worklog)
+            db.session.commit()
 
     def import_worklogs(self):
         """
