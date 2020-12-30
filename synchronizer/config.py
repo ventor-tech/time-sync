@@ -1,3 +1,4 @@
+from mmap import ACCESS_COPY
 import os
 
 from dotenv import load_dotenv
@@ -25,6 +26,8 @@ class ProdConfiguration(object):
     DEV = False
     DEBUG = False
 
+    ACCESS_EMAIL = 'ventor.tech'
+
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'  # NOQA
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
@@ -43,6 +46,8 @@ class DevConfiguration(Configuration):
     SECRET_KEY = 'hello_world'
     DEV = True
     DEBUG = True
+
+    ACCESS_EMAIL = 'ventor.tech'
 
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'
 
