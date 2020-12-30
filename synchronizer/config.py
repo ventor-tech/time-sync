@@ -25,7 +25,7 @@ class ProdConfiguration(object):
     DEV = False
     DEBUG = False
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')  # NOQA
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'  # NOQA
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     OAUTH_CREDENTIALS = {
@@ -44,16 +44,14 @@ class DevConfiguration(Configuration):
     DEV = True
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'
 
     OAUTH_CREDENTIALS = {
         'google': {
             'id': (
-                '1065737064092-huolpcfqs78p0tavq48sme8eagst65q6'
-                # '213737460043-j645q79uk648f4kekcdf7j026c3veqan'
+                '213737460043-j645q79uk648f4kekcdf7j026c3veqan'
                 '.apps.googleusercontent.com'
             ),
-            'secret': '2C5Z-57U6OK5it_TMc2MqOeZ'
-            # 'secret': 'AcIwMNvJfCe-g0LvoCPm5YJs'
+            'secret': 'AcIwMNvJfCe-g0LvoCPm5YJs'
         }
     }

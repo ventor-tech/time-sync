@@ -18,25 +18,22 @@
                         <th>Stopped</th>
                         <th>Duration</th>
                         <th>Issue ID</th>
-                        <th>Correct ID</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for worklog in worklogs %}
-                    <tr class="{% if worklog.correct_id %} table-success {% else %} table-danger {% endif %}">
+                    <tr class="{% if worklog.is_valid %} table-success {% else %} table-danger {% endif %}">
                         <th scope="row">{{loop.index}}</th>
-                        <td>{{worklog.comment}}</td>
+                        <td>{{worklog.comment}}
+                            {% if not worklog.is_valid %}
+                                <div>Error: Issue id is not present in Jira</div>
+                            {% endif %}
+                        </td>
                         <td>{{local_time(worklog.date_started)}}</td>
                         <td>{{local_time(worklog.date_stopped)}}</td>
                         <td>{{seconds_to_time(worklog.duration)}}</td>
                         <td>{{worklog.issue_id}}</td>
-                        <td>{{worklog.correct_id}}
-                            {% if not worklog.correct_id %}
-                                <span data-toggle="popover-hover" data-placement="top" title="Issue with this issue id is not present in Jira">
-                                <i class="fa fa-info-circle" aria-hidden="true"></i></span>
-                            {% endif %}
-                        </td>
                         <td class="text-center">
                             <a href="/worklogs/edit/{{worklog.get_id()}}?next={{request.path}}"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
                             <a href="/worklogs/delete/{{worklog.get_id()}}?next={{request.path}}"><i class="fa fa-trash-alt" aria-hidden="true"></i></a>
