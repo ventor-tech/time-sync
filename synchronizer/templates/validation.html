@@ -25,7 +25,11 @@
                     {% for worklog in worklogs %}
                     <tr class="{% if worklog.is_valid %} table-success {% else %} table-danger {% endif %}">
                         <th scope="row">{{loop.index}}</th>
-                        <td>{{worklog.comment}}</td>
+                        <td>{{worklog.comment}}
+                            {% if not worklog.is_valid %}
+                                <div>Error: Issue id is not present in Jira</div>
+                            {% endif %}
+                        </td>
                         <td>{{local_time(worklog.date_started)}}</td>
                         <td>{{local_time(worklog.date_stopped)}}</td>
                         <td>{{seconds_to_time(worklog.duration)}}</td>

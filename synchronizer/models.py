@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
 from synchronizer.utils import DateAndTime
+from synchronizer.connectors.jira import JiraConnector
 
 lm = LoginManager()
 db = SQLAlchemy()
@@ -497,6 +498,12 @@ class Synchronization(db.Model):
             db.session.delete(s)
             db.session.commit()
         return True
+
+    def validate_worklogs_in_jira(self):
+        worklogs = self.worklogs
+        jiraConnector = JiraConnector(
+            server=self.target.server, login=self.target.login, password=self.target.password)
+        jiraConnector.validate_worklogs(worklogs)
 
     def import_worklogs(self):
         """
