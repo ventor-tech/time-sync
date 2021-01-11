@@ -1,5 +1,8 @@
 import re
 import requests
+
+from cryptography.fernet import Fernet
+from flask import current_app
 from .base import BaseConnector, WrongIssueIDException
 
 
@@ -10,8 +13,19 @@ class JiraConnector(BaseConnector):
         self.server = kwargs['server']
         self.auth = requests.auth.HTTPBasicAuth(
             kwargs['login'],
-            kwargs['password']
+            self.decrypt(current_app.config['ENCRYPTED_KEY'], kwargs['password'])
         )
+
+    def decrypt(self, key, token):
+        """
+        Decryptes token from db with helper key
+        params should be converted to bytes
+
+        :param string key: Helper key for encode and decode
+        :param string token: password from db to be decoded
+        :return: string
+        """
+        return Fernet(key.encode()).decrypt(token.encode()).decode()
 
     def _api(self, method, endpoint, data=None, params=None):
         response = requests.request(

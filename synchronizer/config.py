@@ -41,6 +41,7 @@ class DevConfiguration(Configuration):
     Class with different config variables
     """
     SECRET_KEY = 'hello_world'
+    ENCRYPTED_KEY = 'utFQ5WVOsyL8PGNgLsMRdVA41hzw9bnGbQje_-a9bq4='
     DEV = True
     DEBUG = True
 
