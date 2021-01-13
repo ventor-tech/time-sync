@@ -265,7 +265,7 @@ def run_sync():
             user_id=current_user.get_id()
         )
         new_sync.import_worklogs()
-        new_sync.validate_worklogs_in_jira()
+        new_sync.validate_worklogs()
 
         return redirect(
             url_for(
@@ -322,7 +322,8 @@ def validate_worklogs(sync_id):
             total_synchronized=sum(
                 [x.duration for x in worklogs if x.is_valid]
             ),
-            total_skipped=sum([x.duration for x in worklogs if not x.is_valid])
+            total_skipped=sum([x.duration for x in worklogs if not x.is_valid]),
+            connector_name=sync.target.connector_type.name
         )
     return render_template(
         "error.html",

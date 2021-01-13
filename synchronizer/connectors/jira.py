@@ -1,7 +1,6 @@
 import re
 import requests
 
-from flask import current_app
 from .base import BaseConnector, WrongIssueIDException
 
 
@@ -64,33 +63,19 @@ class JiraConnector(BaseConnector):
                 print(err)
                 raise self.ExportException(i)
 
-    def validate_worklogs(self, worklogs):
+    def validate_issue(self, issue_id):
         """
-        Check existing worklog's task id in target resource
+        Check existing issue id in target resource
+
+        :param str issue_id: Issue id of task in target source
         """
-        for worklog in worklogs:
-            try:
-                data = {
-                    'started': self.convert_datetime(worklog.date_started),
-                    'timeSpentSeconds': self.round_seconds(
-                        worklog.duration
-                    ),
-                    'comment': worklog.comment
-                }
-
-                self._get(
-                    'issue/{0}/worklog'.format(worklog.issue_id),
-                    data,
-                    params={'notifyUsers': 'false'}
-                )
-            except WrongIssueIDException:
-                from synchronizer.models import db
-
-                worklog.is_valid = False
-                db.session.add(worklog)
-                db.session.commit()
-
-                current_app.logger.warning(f'Wrong issue id {worklog.issue_id} in jira.')
+        try:
+            self._get(
+                'issue/{0}/'.format(issue_id),
+            )
+            return True
+        except WrongIssueIDException:
+            return False
 
 
     @staticmethod

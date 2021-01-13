@@ -27,7 +27,7 @@
                         <th scope="row">{{loop.index}}</th>
                         <td>{{worklog.comment}}
                             {% if not worklog.is_valid %}
-                                <div>Error: Issue id is not present in Jira</div>
+                                <div>Error: Issue id is not present in {{ connector_name }}.</div>
                             {% endif %}
                         </td>
                         <td>{{local_time(worklog.date_started)}}</td>
