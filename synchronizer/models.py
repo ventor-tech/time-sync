@@ -1,9 +1,10 @@
 import re
 from datetime import datetime
 
-from flask_login import UserMixin, current_user, LoginManager
-from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
+from flask_login import LoginManager, UserMixin, current_user
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
@@ -497,6 +498,26 @@ class Synchronization(db.Model):
             db.session.delete(s)
             db.session.commit()
         return True
+
+    def validate_worklogs(self):
+        worklogs = self.worklogs
+        target_name = self.target.connector_type.name
+
+        target_connector = ConnectorManager.create_connector(
+            target_name,
+            server=self.target.server,
+            api_token=self.target.api_token,
+            login=self.target.login,
+            password=self.target.password
+        )
+        
+        for worklog in worklogs:
+            if not target_connector.validate_issue(worklog.issue_id):
+                worklog.is_valid = False
+                db.session.add(worklog)
+                current_app.logger.warning(f'Wrong issue id {worklog.issue_id} in {target_name}.')
+
+        db.session.commit()
 
     def import_worklogs(self):
         """
