@@ -68,6 +68,7 @@ class JiraConnector(BaseConnector):
         Check existing issue id in target resource
 
         :param str issue_id: Issue id of task in target source
+        :rtype: bool
         """
         try:
             self._get(

@@ -515,10 +515,9 @@ class Synchronization(db.Model):
             if not target_connector.validate_issue(worklog.issue_id):
                 worklog.is_valid = False
                 db.session.add(worklog)
-                db.session.commit()
+                current_app.logger.warning(f'Wrong issue id {worklog.issue_id} in {target_name}.')
 
-                current_app.logger.warning(
-                    f'Wrong issue id {worklog.issue_id} in {target_name}.')
+        db.session.commit()
 
     def import_worklogs(self):
         """

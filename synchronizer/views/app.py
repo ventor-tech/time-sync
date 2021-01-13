@@ -323,7 +323,7 @@ def validate_worklogs(sync_id):
                 [x.duration for x in worklogs if x.is_valid]
             ),
             total_skipped=sum([x.duration for x in worklogs if not x.is_valid]),
-            connector_name=sync.target.connector_type.name
+            connector_name=sync.target.connector_type.name,
         )
     return render_template(
         "error.html",
