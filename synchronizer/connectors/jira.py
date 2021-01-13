@@ -65,7 +65,7 @@ class JiraConnector(BaseConnector):
 
     def validate_issue(self, issue_id):
         """
-        Check existing issue id in target resource
+        Check if issue exists in JIRA.
 
         :param str issue_id: Issue id of task in target source
         :rtype: bool
