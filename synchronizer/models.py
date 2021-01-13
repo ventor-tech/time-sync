@@ -1,17 +1,19 @@
+import os
 import re
 from datetime import datetime
 
-from flask_login import UserMixin, current_user, LoginManager
-from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, current_user
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
-from synchronizer.utils import DateAndTime
+from synchronizer.utils import AESCipher, DateAndTime
 
 lm = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
+aes = AESCipher(os.environ.get('SECRET_KEY'))
 
 
 def current_user_id_or_none():
@@ -508,9 +510,9 @@ class Synchronization(db.Model):
         source_connector = ConnectorManager.create_connector(
             source_name,
             server=self.source.server,
-            api_token=self.source.api_token,
+            api_token=aes.decrypt(self.source.api_token),
             login=self.source.login,
-            password=self.source.password
+            password=aes.decrypt(self.source.password)
         )
 
         imported_worklogs = source_connector.import_worklogs(
@@ -536,9 +538,9 @@ class Synchronization(db.Model):
         target_connector = ConnectorManager.create_connector(
             target_name,
             server=self.target.server,
-            api_token=self.target.api_token,
+            api_token=aes.decrypt(self.source.api_token),
             login=self.target.login,
-            password=self.target.password
+            password=aes.decrypt(self.source.password)
         )
 
         # Get all valid worklogs from this synchronization

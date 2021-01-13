@@ -17,4 +17,3 @@ def get_session(db_string):
     finally:
         session.close()
         engine.dispose()
-

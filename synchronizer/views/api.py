@@ -1,12 +1,10 @@
 """API views"""
 
-from flask import jsonify, Blueprint, request
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
 
 from synchronizer.connectors.manager import ConnectorManager
 from synchronizer.models import Synchronization
-
-
 
 api_routes = Blueprint(
     'api_routes',
