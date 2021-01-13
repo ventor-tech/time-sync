@@ -58,7 +58,7 @@ flask db upgrade
 
 Override `ALLOWED_REGISTRATION_DOMAINS` const in `config.py` to allow some group of users to access your app:
 ```
-ALLOWED_REGISTRATION_DOMAINS = 'gmail.com'
+ALLOWED_REGISTRATION_DOMAINS = ['gmail.com', ]
 ```
 
 ## Testing

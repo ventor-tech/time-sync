@@ -63,9 +63,9 @@ def oauth_callback(provider):
     oauth = OAuthSignIn.get_provider(provider)
     user_info = oauth.callback()
 
-    domain = current_app.config['ALLOWED_REGISTRATION_DOMAINS'] 
-    if domain not in user_info['email']:
-        flash(f'Only employees with domain of {domain} can get access!', 'error')
+    domains = current_app.config['ALLOWED_REGISTRATION_DOMAINS']
+    if not any(domain in user_info['email'] for domain in domains):
+        flash(f'Only employees with domain of {",".join(domains)} can get access!', 'error')
         return redirect(url_for('app_routes.index'))
 
     if current_user is not None and current_user.is_authenticated:
