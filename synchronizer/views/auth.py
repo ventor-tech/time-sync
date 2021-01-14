@@ -1,6 +1,7 @@
-from logging import error
-from flask import (Blueprint, current_app, flash, redirect, render_template, request,
-                   session, url_for)
+import re
+
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   request, session, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from synchronizer.models import User
 from synchronizer.oauth import OAuthSignIn
@@ -64,8 +65,8 @@ def oauth_callback(provider):
     user_info = oauth.callback()
 
     domains = current_app.config['ALLOWED_REGISTRATION_DOMAINS']
-    if not any(domain in user_info['email'] for domain in domains):
-        flash(f'Only employees with domain of {",".join(domains)} can get access!', 'error')
+    if not any(re.compile(f"@{domain}$").search(user_info['email']) for domain in domains):
+        flash(f'Only employees with domains: {",".join(domains)} can get access!', 'error')
         return redirect(url_for('app_routes.index'))
 
     if current_user is not None and current_user.is_authenticated:
