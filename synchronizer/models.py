@@ -554,9 +554,9 @@ class Synchronization(db.Model):
         target_connector = ConnectorManager.create_connector(
             target_name,
             server=self.target.server,
-            api_token=self.source.api_token,
+            api_token=self.target.api_token,
             login=self.target.login,
-            password=self.source.password
+            password=self.target.password
         )
 
         # Get all valid worklogs from this synchronization
