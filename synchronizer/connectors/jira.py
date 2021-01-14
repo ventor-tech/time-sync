@@ -1,8 +1,6 @@
 import re
 import requests
 
-from cryptography.fernet import Fernet
-from flask import current_app
 from .base import BaseConnector, WrongIssueIDException
 
 

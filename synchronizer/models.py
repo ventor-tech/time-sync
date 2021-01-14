@@ -372,8 +372,8 @@ class Connector(db.Model):
     name = db.Column(db.String(64), nullable=False)
     server = db.Column(db.String(128), default="")
     login = db.Column(db.String(64), default="")
-    password = db.Column(db.String(120), default="")
-    api_token = db.Column(db.String(120), default="")
+    _password = db.Column(db.String(255), default="")
+    _api_token = db.Column(db.String(255), default="")
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
@@ -393,6 +393,22 @@ class Connector(db.Model):
         'ConnectorType',
         backref='connector_types'
     )
+
+    @property
+    def password(self):
+        return aes.decrypt(self._password)
+
+    @password.setter
+    def password(self, value):
+        self._password = aes.encrypt(value)
+
+    @property
+    def api_token(self):
+        return aes.decrypt(self._api_token)
+
+    @api_token.setter
+    def api_token(self, value):
+        self._api_token = aes.encrypt(value)
 
     def get_id(self):
         """
@@ -510,9 +526,9 @@ class Synchronization(db.Model):
         source_connector = ConnectorManager.create_connector(
             source_name,
             server=self.source.server,
-            api_token=aes.decrypt(self.source.api_token),
+            api_token=self.source.api_token,
             login=self.source.login,
-            password=aes.decrypt(self.source.password)
+            password=self.source.password
         )
 
         imported_worklogs = source_connector.import_worklogs(
@@ -538,9 +554,9 @@ class Synchronization(db.Model):
         target_connector = ConnectorManager.create_connector(
             target_name,
             server=self.target.server,
-            api_token=aes.decrypt(self.source.api_token),
+            api_token=self.source.api_token,
             login=self.target.login,
-            password=aes.decrypt(self.source.password)
+            password=self.source.password
         )
 
         # Get all valid worklogs from this synchronization
