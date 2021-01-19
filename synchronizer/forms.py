@@ -1,10 +1,28 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import DateTimeField, TextAreaField, SelectField, validators, HiddenField
+from wtforms import (DateTimeField, HiddenField, PasswordField, SelectField,
+                     StringField, TextAreaField, validators)
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.ext.sqlalchemy.orm import model_form
 
-from synchronizer.models import db, Connector, ConnectorType, Worklog, User
+from synchronizer.models import Connector, ConnectorType, User, db
+
+
+class ConnectorForm(FlaskForm):
+
+    @staticmethod
+    def enabled_connectors():
+        return Connector.query.filter_by(user_id=current_user.get_id())
+
+    name = StringField()
+    server = StringField()
+    login = StringField()
+    password = PasswordField()
+    api_token = StringField()
+    connector_type = QuerySelectField(
+        query_factory=enabled_connectors.__func__,
+        allow_blank=True
+    )
 
 
 class SyncForm(FlaskForm):
