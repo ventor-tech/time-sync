@@ -44,7 +44,7 @@ class DevConfiguration(Configuration):
     DEV = True
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time_sync_master'
 
     OAUTH_CREDENTIALS = {
         'google': {
