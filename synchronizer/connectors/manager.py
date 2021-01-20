@@ -1,7 +1,7 @@
-from .jira import JiraConnector
-from .toggl import TogglConnector
 from .gitlab import GitlabConnector
+from .jira import JiraConnector
 from .odoo import OdooConnector
+from .toggl import TogglConnector
 
 
 class ConnectorManager(object):
@@ -20,5 +20,5 @@ class ConnectorManager(object):
             if connector.NAME.lower() == connector_name.lower():
                 return connector(**kwargs)
         raise NotImplementedError(
-            'Connecter with name {} is not implemented'.format(connector_name)
+            'Connector with name {} is not implemented'.format(connector_name)
         )

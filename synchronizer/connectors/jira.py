@@ -1,5 +1,6 @@
 import re
 import requests
+
 from .base import BaseConnector, WrongIssueIDException
 
 
