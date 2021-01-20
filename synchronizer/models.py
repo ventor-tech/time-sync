@@ -422,6 +422,16 @@ class Connector(db.Model):
             db.session.commit()
         return True
 
+    @classmethod
+    def update(cls, connector):
+        """
+        Updates connector
+        """
+        if connector.user_id == current_user.get_id():
+            db.session.add(connector)
+            db.session.commit()
+        return True
+
 
 class Synchronization(db.Model):
     __tablename__ = 'synchronizations'

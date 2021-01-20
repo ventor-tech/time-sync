@@ -1,8 +1,8 @@
 {% extends "common/index.html" %} {% block content %}
 <div class="container">
 	<div class="mx-auto mt-4 col-sm-6 col-md-5 text-left">
-		<h1>Add new connector</h1>
-		<form method="POST" action="/connector/add">
+		<h1>{{ headline }}</h1>
+		<form method="POST" action={{ action }}>
 			{{ form.csrf_token }}
 			<p class="text-danger text-center">{{error}}</p>
 			<div class="form-group {% if form.connector_type.errors %}is-invalid{% endif %}">

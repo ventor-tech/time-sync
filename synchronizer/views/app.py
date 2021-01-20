@@ -1,14 +1,13 @@
 """App views"""
 
-from flask import render_template, redirect, url_for, Blueprint, request
-from flask_login import login_required, current_user
-from flask_wtf import FlaskForm
+from flask import Blueprint, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from wtforms.ext.sqlalchemy.orm import model_form
 
-from synchronizer.forms import SyncForm, WorklogForm, UserForm
-from synchronizer.models import lm, db, Connector, User,\
-    Worklog, Synchronization
-
+from flask_wtf import FlaskForm
+from synchronizer.forms import SyncForm, UserForm, WorklogForm
+from synchronizer.models import (
+    Connector, Synchronization, User, Worklog, db, lm)
 
 app_routes = Blueprint(
     'app_routes',
@@ -113,7 +112,11 @@ def add_connector():
             user_id=current_user.get_id()
         )
         return redirect(url_for("app_routes.get_connectors"))
-    return render_template("forms/connector.html", form=form)
+    return render_template(
+        "forms/connector.html",
+        headline='Add a new connector',
+        action="/connector/add",
+        form=form)
 
 
 @app_routes.route('/connector/delete/<connector_id>', methods=["GET"])
@@ -124,6 +127,37 @@ def delete_connector(connector_id):
     """
     Connector.delete(connector_id)
     return redirect(url_for("app_routes.get_connectors"))
+
+
+@app_routes.route('/connector/edit/<int:connector_id>', methods=["GET", "POST"])
+@login_required
+def edit_connector(connector_id):
+    """
+    Edits connector
+    """
+    connector = Connector.query.filter_by(id=connector_id).first()
+
+    ConnectorForm = model_form(
+        Connector,
+        base_class=FlaskForm,
+        db_session=db.session
+    )
+    form = ConnectorForm(obj=connector)
+    if form.validate_on_submit():
+        connector.name=form.name.data,
+        connector.server=form.server.data,
+        connector.login=form.login.data,
+        connector.password=form.password.data,
+        connector.api_token=form.api_token.data,
+        connector.connector_type_id=form.connector_type.raw_data[0],
+        connector.user_id=current_user.get_id()
+
+        Connector.update(connector)
+        return redirect(url_for("app_routes.get_connectors"))
+    return render_template(
+        "forms/connector.html",
+        headline='Edit a connector',
+        form=form)
 
 
 ######
