@@ -27,7 +27,9 @@
                         <th scope="row">{{loop.index}}</th>
                         <td>{{worklog.comment}}
                             {% if not worklog.is_valid %}
-                                <div>Error: Issue id is not exists in {{ connector_name }}.</div>
+                                <div>
+                                    <span class="badge badge-danger">Error: Issue id is not exists in {{ connector_name }}.</span>
+                                </div>
                             {% endif %}
                         </td>
                         <td>{{local_time(worklog.date_started)}}</td>
