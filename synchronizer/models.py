@@ -372,8 +372,8 @@ class Connector(db.Model):
     name = db.Column(db.String(64), nullable=False)
     server = db.Column(db.String(128), default="")
     login = db.Column(db.String(64), default="")
-    _password = db.Column(db.String(255), default="")
-    _api_token = db.Column(db.String(255), default="")
+    _password = db.Column('password', db.String(256), default="")
+    _api_token = db.Column('api_token', db.String(256), default="")
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
