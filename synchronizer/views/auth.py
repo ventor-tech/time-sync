@@ -65,7 +65,8 @@ def oauth_callback(provider):
     user_info = oauth.callback()
 
     domains = current_app.config['ALLOWED_REGISTRATION_DOMAINS']
-    if not any(re.compile(f"@{domain}$").search(user_info['email']) for domain in domains):
+    email = user_info['email']
+    if not any(re.search(f'@{domain}$', email) for domain in domains):
         flash(f'Only employees with domains: {",".join(domains)} can get access!', 'error')
         return redirect(url_for('app_routes.index'))
 
