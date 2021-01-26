@@ -71,9 +71,7 @@ class JiraConnector(BaseConnector):
         :rtype: bool
         """
         try:
-            self._get(
-                'issue/{0}/'.format(issue_id),
-            )
+            self._get('issue/{0}/'.format(issue_id))
             return True
         except WrongIssueIDException:
             return False
