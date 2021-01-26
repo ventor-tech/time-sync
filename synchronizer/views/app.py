@@ -1,10 +1,10 @@
 """App views"""
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.orm import model_form
 
-from flask_wtf import FlaskForm
 from synchronizer.forms import SyncForm, UserForm, WorklogForm
 from synchronizer.models import (
     Connector, Synchronization, User, Worklog, db, lm)
@@ -137,6 +137,9 @@ def edit_connector(connector_id):
     """
     connector = Connector.query.filter_by(id=connector_id).first()
 
+    if connector.user_id != current_user.get_id():
+        abort(401)
+
     ConnectorForm = model_form(
         Connector,
         base_class=FlaskForm,
@@ -144,10 +147,9 @@ def edit_connector(connector_id):
     )
     form = ConnectorForm(obj=connector)
     if form.validate_on_submit():
-        form.populate_obj(connector)
-        connector.update()
-
+        connector.update(form=form)
         return redirect(url_for("app_routes.get_connectors"))
+
     return render_template(
         "forms/connector.html",
         headline='Edit a connector',

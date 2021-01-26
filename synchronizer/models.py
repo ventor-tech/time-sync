@@ -422,13 +422,17 @@ class Connector(db.Model):
             db.session.commit()
         return True
 
-    def update(self, connector):
+    def update(self, form=None, **kwargs):
         """
         Updates connector
         """
-        if connector.user_id == current_user.get_id():
-            db.session.add(connector)
-            db.session.commit()
+        if form:
+            form.populate_obj(self)
+        else:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+
+        db.session.commit()
         return True
 
 
