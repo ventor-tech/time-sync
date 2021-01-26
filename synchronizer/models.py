@@ -422,8 +422,7 @@ class Connector(db.Model):
             db.session.commit()
         return True
 
-    @classmethod
-    def update(cls, connector):
+    def update(self, connector):
         """
         Updates connector
         """

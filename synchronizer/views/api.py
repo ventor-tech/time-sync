@@ -65,9 +65,11 @@ def issues():
 @api_routes.route('/connector/<int:connector_type_id>')
 @login_required
 def get_connector_type_fields(connector_type_id):
-    connector_type_name = ConnectorType.query.get(connector_type_id).name
-    for connector in ConnectorManager.CONNECTORS:
-        if connector.NAME.lower() == connector_type_name.lower():
-            return jsonify({'fields': connector.FORM_FIELDS})
-    raise NotImplementedError(
-        'Connector with name {} is not implemented'.format(connector_type_name))
+    connector_type = ConnectorType.query.get(connector_type_id)
+
+    if connector_type:
+        connector = ConnectorManager.get_connector(connector_type.name)
+        return jsonify({'fields': connector.FORM_FIELDS})
+
+    raise Exception(
+        'Connector type with id {} does not exist.'.format(connector_type_id))

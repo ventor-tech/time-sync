@@ -144,15 +144,9 @@ def edit_connector(connector_id):
     )
     form = ConnectorForm(obj=connector)
     if form.validate_on_submit():
-        connector.name=form.name.data,
-        connector.server=form.server.data,
-        connector.login=form.login.data,
-        connector.password=form.password.data,
-        connector.api_token=form.api_token.data,
-        connector.connector_type_id=form.connector_type.raw_data[0],
-        connector.user_id=current_user.get_id()
+        form.populate_obj(connector)
+        connector.update()
 
-        Connector.update(connector)
         return redirect(url_for("app_routes.get_connectors"))
     return render_template(
         "forms/connector.html",
