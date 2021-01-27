@@ -28,7 +28,7 @@
                         <td>{{worklog.comment}}
                             {% if not worklog.is_valid and not worklog.issue_id %}
                                 <div>
-                                    <span class="badge badge-danger">Error: Issue ID is not valid.</span>
+                                    <span class="badge badge-danger">Missed Issue ID.</span>
                                 </div>
                             {% elif not worklog.is_valid %}
                                 <div>
