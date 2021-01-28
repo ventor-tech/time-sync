@@ -26,14 +26,16 @@
                     <tr class="{% if worklog.is_valid %} table-success {% else %} table-danger {% endif %}">
                         <th scope="row">{{loop.index}}</th>
                         <td>{{worklog.comment}}
-                            {% if not worklog.is_valid and not worklog.issue_id %}
-                                <div>
-                                    <span class="badge badge-danger">Missed Issue ID.</span>
-                                </div>
-                            {% elif not worklog.is_valid %}
-                                <div>
-                                    <span class="badge badge-danger">Error: Issue ID is not exist in {{ connector_name }}.</span>
-                                </div>
+                            {% if not worklog.is_valid %}
+                                {% if not worklog.issue_id %}
+                                    <div>
+                                        <span class="badge badge-danger">Missed Issue ID.</span>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <span class="badge badge-danger">Error: Issue ID is not exist in {{ connector_name }}.</span>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td>{{local_time(worklog.date_started)}}</td>

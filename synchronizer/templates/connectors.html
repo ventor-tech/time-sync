@@ -20,6 +20,9 @@
                 <td>{{connector.name}}</td>
                 <td>{{connector.connector_type}}</td>
                 <td class="text-center">
+                    <a href="/connector/edit/{{connector.get_id()}}">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                    </a>
                     <a href="/connector/delete/{{connector.get_id()}}">
                         <i class="fa fa-trash-alt" aria-hidden="true"></i>
                     </a>

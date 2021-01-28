@@ -1,11 +1,10 @@
 """API views"""
 
-from flask import jsonify, Blueprint, request
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
 
 from synchronizer.connectors.manager import ConnectorManager
-from synchronizer.models import Synchronization
-
+from synchronizer.models import ConnectorType, Synchronization
 
 
 api_routes = Blueprint(
@@ -61,3 +60,16 @@ def issues():
         results = [{'id': term, 'text': 'Use "{}" as issue ID'.format(term)}]
 
     return jsonify({'results': results})
+
+
+@api_routes.route('/connector/<int:connector_type_id>')
+@login_required
+def get_connector_type_fields(connector_type_id):
+    connector_type = ConnectorType.query.get(connector_type_id)
+
+    if connector_type:
+        connector = ConnectorManager.get_connector(connector_type.name)
+        return jsonify({'fields': connector.FORM_FIELDS})
+
+    raise Exception(
+        'Connector type with id {} does not exist.'.format(connector_type_id))

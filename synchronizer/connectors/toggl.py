@@ -5,6 +5,7 @@ from .base import BaseConnector
 
 class TogglConnector(BaseConnector):
     NAME = 'Toggl'
+    FORM_FIELDS = ['name', 'api_token', ]
 
     def __init__(self, **kwargs):
         super(TogglConnector, self).__init__()
