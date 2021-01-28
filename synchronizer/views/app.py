@@ -256,6 +256,8 @@ def run_sync():
             user_id=current_user.get_id()
         )
         new_sync.import_worklogs()
+        new_sync.validate_worklogs()
+
         return redirect(
             url_for(
                 "app_routes.validate_worklogs",
@@ -311,7 +313,8 @@ def validate_worklogs(sync_id):
             total_synchronized=sum(
                 [x.duration for x in worklogs if x.is_valid]
             ),
-            total_skipped=sum([x.duration for x in worklogs if not x.is_valid])
+            total_skipped=sum([x.duration for x in worklogs if not x.is_valid]),
+            connector_name=sync.target.connector_type.name,
         )
     return render_template(
         "error.html",
@@ -413,6 +416,7 @@ def cancel_synchronization(sync_id):
     sync = Synchronization.query.get(sync_id)
     if sync:
         sync.cancel()
+        Synchronization.delete(sync_id)
         return render_template(
             "message.html",
             title="Cancel synchronization",
