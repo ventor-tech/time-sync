@@ -1,3 +1,4 @@
+import os
 import re
 from datetime import datetime
 
@@ -8,11 +9,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
-from synchronizer.utils import DateAndTime
+from synchronizer.utils import AESCipher, DateAndTime
 
 lm = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
+aes = AESCipher(os.environ.get('SECRET_KEY'))
 
 
 def current_user_id_or_none():
@@ -371,8 +373,8 @@ class Connector(db.Model):
     name = db.Column(db.String(64), nullable=False)
     server = db.Column(db.String(128), default="")
     login = db.Column(db.String(64), default="")
-    password = db.Column(db.String(120), default="")
-    api_token = db.Column(db.String(120), default="")
+    _password = db.Column('password', db.String(64), default="")
+    _api_token = db.Column('api_token', db.String(172), default="")
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
@@ -392,6 +394,22 @@ class Connector(db.Model):
         'ConnectorType',
         backref='connector_types'
     )
+
+    @property
+    def password(self):
+        return aes.decrypt(self._password)
+
+    @password.setter
+    def password(self, value):
+        self._password = aes.encrypt(value)
+
+    @property
+    def api_token(self):
+        return aes.decrypt(self._api_token)
+
+    @api_token.setter
+    def api_token(self, value):
+        self._api_token = aes.encrypt(value)
 
     def get_id(self):
         """
