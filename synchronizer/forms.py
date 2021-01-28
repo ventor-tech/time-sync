@@ -19,7 +19,7 @@ class ConnectorForm(FlaskForm):
     name = StringField()
     server = StringField()
     login = StringField()
-    password = PasswordField()
+    password = StringField()
     api_token = StringField()
     connector_type = QuerySelectField(
         query_factory=connector_types,
