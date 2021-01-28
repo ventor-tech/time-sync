@@ -36,7 +36,7 @@ class User(db.Model, UserMixin):
     )
     date_created = db.Column(
         db.DateTime(timezone=True),
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
 
     issue_id_pattern = r'^\[((?P<cn>.*):)?(?P<issue_id>.*)\]\s*(?P<comment>.*)'
@@ -345,7 +345,7 @@ class ConnectorType(db.Model):
     ctype = db.Column(db.String(64))
     date_created = db.Column(
         db.DateTime(timezone=True),
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
 
     def __repr__(self):
@@ -382,7 +382,7 @@ class Connector(db.Model):
     )
     date_created = db.Column(
         db.DateTime(timezone=True),
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
 
     connector_type_id = db.Column(
@@ -478,7 +478,7 @@ class Synchronization(db.Model):
     )
     date_created = db.Column(
         db.DateTime(timezone=True),
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
     is_completed = db.Column(db.Boolean, default=False)
     is_cancelled = db.Column(db.Boolean, default=False)

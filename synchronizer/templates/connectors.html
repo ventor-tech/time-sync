@@ -4,13 +4,13 @@
 <div class="container mt-4">
     <h1>Connectors</h1>
     {% if connectors %}
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover" data-order="[[ 1, &quot;asc&quot; ]]">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Name</th>
                 <th>Type</th>
-                <td></td>
+                <td>Actions</td>
             </tr>
         </thead>
         <tbody>
@@ -20,10 +20,10 @@
                 <td>{{connector.name}}</td>
                 <td>{{connector.connector_type}}</td>
                 <td class="text-center">
-                    <a href="/connector/edit/{{connector.get_id()}}">
+                    <a class="btn btn-outline-primary" href="/connector/edit/{{connector.get_id()}}">
                         <i class="fa fa-pencil-alt" aria-hidden="true"></i>
                     </a>
-                    <a href="/connector/delete/{{connector.get_id()}}">
+                    <a class="btn btn-outline-primary" href="/connector/delete/{{connector.get_id()}}">
                         <i class="fa fa-trash-alt" aria-hidden="true"></i>
                     </a>
                 </td>

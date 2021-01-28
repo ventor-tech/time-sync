@@ -28,7 +28,7 @@
                 These rows are invalid synchronizations that need to be completed or deleted.
             </p>
             {% if synchronizations %}                
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" data-order="[[ 1, &quot;asc&quot; ]]">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -38,16 +38,14 @@
                         <th>Started From</th>
                         <th>Worklogs</th>
                         <th>Is Completed</th>
-                        <th>Is Cancelled</th>
-                        <th></th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for s in synchronizations %}
                     <tr class="
-                        {{ 'bg-warning' if not s.is_completed and not s.is_cancelled else '' }}
-                        {{ 'bg-success' if s.is_completed and not s.is_cancelled else '' }}
+                        {{ 'text-warning' if not s.is_completed and not s.is_cancelled else '' }}
+                        {{ 'text-success' if s.is_completed and not s.is_cancelled else '' }}
                     ">
                         <th scope="row">{{loop.index}}</th>
                         <td>{{local_time(s.date_created)}}</td>
@@ -55,15 +53,18 @@
                         <td>{{s.target.name}}</td>
                         <td>{{local_time(s.date_started_from)}}</td>
                         <td>{{s.worklogs|length}}</td>
-                        <td>{{s.is_completed}}</td>
-                        <td>{{s.is_cancelled}}</td>
-                        <td class="text-center">
-                            <a href="/validate/{{s.id}}" target="_blank">
-                                <i class="fa fa-external-link-alt"></i>
-                            </a>
+                        <td>
+                            {% if s.is_completed %}
+                                <i class="far fa-check-circle"></i>
+                            {% else %}
+                                <i class="far fa-times-circle"></i>
+                            {% endif %}
                         </td>
                         <td class="text-center">
-                            <a href="/synchronizations/delete/{{s.get_id()}}?next={{request.path}}">
+                            <a class="btn btn-outline-primary" href="/validate/{{s.id}}" target="_blank">
+                                <i class="fa fa-external-link-alt"></i>
+                            </a>
+                            <a class="btn btn-outline-danger" href="/synchronizations/delete/{{s.get_id()}}?next={{request.path}}">
                                 <i class="fa fa-trash-alt"></i>
                             </a>
                         </td>

@@ -21,4 +21,12 @@ $(function () {
         },
         minimumInputLength: 3
     });
+
+    $(document).ready(function () {
+        $('table').DataTable({
+            columnDefs: [
+                { type: 'natural', targets: '_all' }
+            ]
+        });
+    });
 });

@@ -135,12 +135,8 @@ def edit_connector(connector_id):
     if connector.user_id != current_user.get_id():
         abort(401)
 
-    ConnectorForm = model_form(
-        Connector,
-        base_class=FlaskForm,
-        db_session=db.session
-    )
     form = ConnectorForm(obj=connector)
+
     if form.validate_on_submit():
         connector.update(form=form)
         return redirect(url_for("app_routes.get_connectors"))

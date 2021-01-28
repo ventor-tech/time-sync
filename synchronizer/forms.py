@@ -7,19 +7,23 @@ from wtforms.ext.sqlalchemy.orm import model_form
 
 from synchronizer.models import Connector, ConnectorType, User, db
 
-def enabled_connectors():
+
+def available_connectors():
     return Connector.query.filter_by(user_id=current_user.get_id())
 
-class ConnectorForm(FlaskForm):
+def connector_types():
+    return ConnectorType.query.all()
 
+
+class ConnectorForm(FlaskForm):
     name = StringField()
     server = StringField()
     login = StringField()
     password = PasswordField()
     api_token = StringField()
     connector_type = QuerySelectField(
-        query_factory=enabled_connectors,
-        allow_blank=True
+        query_factory=connector_types,
+        allow_blank=False
     )
 
 
@@ -28,11 +32,11 @@ class SyncForm(FlaskForm):
     date_started_from = DateTimeField(format='%Y-%m-%d')
 
     source = QuerySelectField(
-        query_factory=enabled_connectors,
+        query_factory=available_connectors,
         allow_blank=True
     )
     target = QuerySelectField(
-        query_factory=enabled_connectors,
+        query_factory=available_connectors,
         allow_blank=True
     )
 
@@ -54,7 +58,6 @@ UserForm = model_form(User, base_class=FlaskForm, db_session=db.session)
 UserForm.default_target = QuerySelectField(
     query_factory=lambda: Connector.query.join(ConnectorType).filter(
         Connector.user_id==current_user.get_id(),
-        # connector_type_id=2
         ConnectorType.ctype=='target'
     ),
     allow_blank=True

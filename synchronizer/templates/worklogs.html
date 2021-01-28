@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             {% if worklogs %}                
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" data-page-length="25" data-order="[[ 2, &quot;asc&quot; ]]">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -32,6 +32,7 @@
                         <th>Stopped</th>
                         <th>Duration</th>
                         <th>Issue ID</th>
+                        <th>Valid?</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -44,6 +45,13 @@
                         <td>{{local_time(worklog.date_stopped)}}</td>
                         <td>{{seconds_to_time(worklog.duration)}}</td>
                         <td>{{worklog.issue_id}}</td>
+                        <td>
+                            {% if worklog.is_valid %}
+                                <i class="far fa-check-circle"></i>
+                            {% else %}
+                                <i class="far fa-times-circle"></i>
+                            {% endif %}
+                        </td>
                         <td class="text-center">
                             <a href="/worklogs/delete/{{worklog.get_id()}}?next={{request.path}}">
                                 <i class="fa fa-trash-alt" aria-hidden="true"></i>
