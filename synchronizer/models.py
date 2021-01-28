@@ -542,11 +542,11 @@ class Synchronization(db.Model):
             password=self.target.password
         )
         
-        for worklog in worklogs:
-            if not target_connector.validate_issue(worklog.issue_id):
-                worklog.is_valid = False
-                db.session.add(worklog)
-                current_app.logger.warning(f'Wrong issue id {worklog.issue_id} in {target_name}.')
+        for w in worklogs:
+            if w.is_valid:
+                if not target_connector.validate_issue(w.issue_id):
+                    w.is_valid = False
+                    current_app.logger.warning(f'Wrong issue id {w.issue_id} in {target_name}.')
 
         db.session.commit()
 

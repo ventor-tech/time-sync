@@ -39,7 +39,7 @@ def index():
     return render_template(
         "main.html",
         title="Time Synchronizer"
-    )-
+    )
 
 
 @app_routes.route('/settings', methods=["GET", "POST"])
