@@ -1,10 +1,13 @@
 """App views"""
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from wtforms.ext.sqlalchemy.orm import model_form
 
 from synchronizer.forms import ConnectorForm, SyncForm, UserForm, WorklogForm
 from synchronizer.models import Connector, Synchronization, User, Worklog, db, lm
+
 
 app_routes = Blueprint(
     'app_routes',
@@ -36,7 +39,7 @@ def index():
     return render_template(
         "main.html",
         title="Time Synchronizer"
-    )
+    )-
 
 
 @app_routes.route('/settings', methods=["GET", "POST"])
@@ -104,7 +107,11 @@ def add_connector():
             user_id=current_user.get_id()
         )
         return redirect(url_for("app_routes.get_connectors"))
-    return render_template("forms/connector.html", form=form)
+    return render_template(
+        "forms/connector.html",
+        headline='Add a new connector',
+        action="/connector/add",
+        form=form)
 
 
 @app_routes.route('/connector/delete/<connector_id>', methods=["GET"])
@@ -115,6 +122,33 @@ def delete_connector(connector_id):
     """
     Connector.delete(connector_id)
     return redirect(url_for("app_routes.get_connectors"))
+
+
+@app_routes.route('/connector/edit/<int:connector_id>', methods=["GET", "POST"])
+@login_required
+def edit_connector(connector_id):
+    """
+    Edits connector
+    """
+    connector = Connector.query.filter_by(id=connector_id).first()
+
+    if connector.user_id != current_user.get_id():
+        abort(401)
+
+    ConnectorForm = model_form(
+        Connector,
+        base_class=FlaskForm,
+        db_session=db.session
+    )
+    form = ConnectorForm(obj=connector)
+    if form.validate_on_submit():
+        connector.update(form=form)
+        return redirect(url_for("app_routes.get_connectors"))
+
+    return render_template(
+        "forms/connector.html",
+        headline='Edit a connector',
+        form=form)
 
 
 ######

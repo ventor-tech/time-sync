@@ -441,6 +441,19 @@ class Connector(db.Model):
             db.session.commit()
         return True
 
+    def update(self, form=None, **kwargs):
+        """
+        Updates connector
+        """
+        if form:
+            form.populate_obj(self)
+        else:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+
+        db.session.commit()
+        return True
+
 
 class Synchronization(db.Model):
     __tablename__ = 'synchronizations'

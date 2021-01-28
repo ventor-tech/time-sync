@@ -6,6 +6,7 @@ from .base import BaseConnector, WrongIssueIDException
 
 class JiraConnector(BaseConnector):
     NAME = 'Jira'
+    FORM_FIELDS = ['name', 'server', 'login', 'password', ]
 
     def __init__(self, **kwargs):
         self.server = kwargs['server']
