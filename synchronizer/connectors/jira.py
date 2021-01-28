@@ -64,6 +64,22 @@ class JiraConnector(BaseConnector):
                 print(err)
                 raise self.ExportException(i)
 
+    def validate_issue(self, issue_id):
+        """
+        Check if issue exists in JIRA.
+
+        :param str issue_id: Issue id of task in target source
+        :rtype: bool
+        """
+        try:
+            self._get(
+                'issue/{0}/'.format(issue_id),
+            )
+            return True
+        except WrongIssueIDException:
+            return False
+
+
     @staticmethod
     def round_seconds(seconds):
         """
