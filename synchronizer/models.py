@@ -600,8 +600,8 @@ class Synchronization(db.Model):
         # Remove worklogs for current sync
         Worklog.delete_from_sync(self.get_id())
 
-        self.is_cancelled = True
-        db.session.commit()
+        # self.is_cancelled = True
+        # db.session.commit()
         return True
 
     def complete(self):

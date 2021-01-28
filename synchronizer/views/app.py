@@ -425,6 +425,7 @@ def cancel_synchronization(sync_id):
     sync = Synchronization.query.get(sync_id)
     if sync:
         sync.cancel()
+        Synchronization.delete(sync_id)
         return render_template(
             "message.html",
             title="Cancel synchronization",
