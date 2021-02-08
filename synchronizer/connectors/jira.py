@@ -9,13 +9,13 @@ from .base import BaseConnector, WrongIssueIDException
 
 class JiraConnector(BaseConnector):
     NAME = 'Jira'
-    FORM_FIELDS = ['name', 'server', 'login', 'password', ]
+    FORM_FIELDS = ['name', 'server', 'login', 'api_token', ]
 
     def __init__(self, **kwargs):
         self.server = kwargs['server']
         self.auth = requests.auth.HTTPBasicAuth(
             kwargs['login'],
-            kwargs['password']
+            kwargs['api_token']
         )
         # Apply delays between attempts to connection to
         # jira server in case of maximum requests quota
