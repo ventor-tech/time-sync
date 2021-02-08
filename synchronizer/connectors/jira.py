@@ -1,5 +1,6 @@
 import re
 import requests
+
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -16,17 +17,15 @@ class JiraConnector(BaseConnector):
             kwargs['login'],
             kwargs['password']
         )
-
-    def _api(self, method, endpoint, data=None, params=None):
         # Apply delays between attempts to connection to
         # jira server in case of maximum requests quota
-        session = requests.Session()
-        retry = Retry(connect=3, backoff_factor=0.5)
-        adapter = HTTPAdapter(max_retries=retry)
+        self.session = requests.Session()
+        self.retry = Retry(connect=3, backoff_factor=0.5)
+        self.adapter = HTTPAdapter(max_retries=self.retry)
+        self.session.mount('https://', self.adapter)
 
-        session.mount('https://', adapter)
-
-        response = session.request(
+    def _api(self, method, endpoint, data=None, params=None):
+        response = self.session.request(
             method,
             'https://{0}/rest/api/2/{1}'.format(self.server, endpoint),
             json=data,
