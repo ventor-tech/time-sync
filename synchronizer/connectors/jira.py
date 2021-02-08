@@ -6,13 +6,13 @@ from .base import BaseConnector, WrongIssueIDException
 
 class JiraConnector(BaseConnector):
     NAME = 'Jira'
-    FORM_FIELDS = ['name', 'server', 'login', 'password', ]
+    FORM_FIELDS = ['name', 'server', 'login', 'api_token', ]
 
     def __init__(self, **kwargs):
         self.server = kwargs['server']
         self.auth = requests.auth.HTTPBasicAuth(
             kwargs['login'],
-            kwargs['password']
+            kwargs['api_token']
         )
 
     def _api(self, method, endpoint, data=None, params=None):
