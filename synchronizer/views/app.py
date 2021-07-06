@@ -1,9 +1,9 @@
 """App views"""
 
-from flask import Blueprint, abort, redirect, render_template, request, url_for
+from flask import Blueprint, abort, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
-from flask_wtf import FlaskForm
-from wtforms.ext.sqlalchemy.orm import model_form
+from synchronizer.utils import validate_connector
+from synchronizer.models import ConnectorType
 
 from synchronizer.forms import ConnectorForm, SyncForm, UserForm, WorklogForm
 from synchronizer.models import Connector, Synchronization, User, Worklog, db, lm
@@ -97,6 +97,17 @@ def add_connector():
     """
     form = ConnectorForm()
     if form.validate_on_submit():
+        connector_type = ConnectorType.query.get(form.connector_type.raw_data[0])
+
+        if not validate_connector(
+            server=form.server.data,
+            login=form.login.data,
+            api_token=form.api_token.data,
+            connector_type=connector_type.name,
+        ):
+            flash("Connector is not valid. Check spelling or correctness of fields and try again", "error")
+            return redirect(url_for("app_routes.add_connector"))
+
         Connector.create(
             name=form.name.data,
             server=form.server.data,
@@ -106,7 +117,9 @@ def add_connector():
             connector_type_id=form.connector_type.raw_data[0],
             user_id=current_user.get_id()
         )
+
         return redirect(url_for("app_routes.get_connectors"))
+
     return render_template(
         "forms/connector.html",
         headline='Add a new connector',

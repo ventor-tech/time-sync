@@ -1,9 +1,10 @@
 import hashlib
-import iso8601
-import pytz
-
 from base64 import b64decode, b64encode
 from datetime import date, datetime, time, timedelta
+
+import iso8601
+import pytz
+import requests
 from Crypto import Random
 from Crypto.Cipher import AES
 
@@ -119,3 +120,33 @@ class DateAndTime(object):
             date2 = self.parse_iso_str(date2)
 
         return date1.date() == date2.date()
+
+
+def validate_connector(**kwargs):
+    if "toggl" in kwargs["connector_type"].lower():
+        auth = requests.auth.HTTPBasicAuth(
+            kwargs["api_token"],
+            'api_token'
+        )
+
+        response = requests.request(
+            "GET",
+            "https://api.track.toggl.com/api/v8/me",
+            auth=auth,
+        )
+
+        return True if response.status_code == 200 else False
+
+    if "jira" in kwargs["connector_type"].lower():
+        auth = requests.auth.HTTPBasicAuth(
+            kwargs['login'],
+            kwargs['api_token']
+        )
+
+        response = requests.request(
+            "GET",
+            "https://{0}/rest/api/2/myself".format(kwargs['server']),
+            auth=auth,
+        )
+
+        return True if response.status_code == 200 else False
