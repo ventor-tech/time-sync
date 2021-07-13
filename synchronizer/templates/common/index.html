@@ -29,7 +29,7 @@
 {% include 'common/header.html' %}
 <!-- /HEADER -->
 
-<div class="content">
+<div class="content container">
     {% block messages %}
         {% with errors = get_flashed_messages(category_filter=["error"]) %}
         {% if errors %}

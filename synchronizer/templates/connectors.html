@@ -10,7 +10,8 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Type</th>
-                <td>Actions</td>
+                <td class="text-center">Validation</td>
+                <td class="text-center">Actions</td>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +20,17 @@
                 <th scope="row">{{loop.index}}</th>
                 <td>{{connector.name}}</td>
                 <td>{{connector.connector_type}}</td>
+                <td class="text-center">
+                    {% if connector.is_valid %}
+                        <a class="btn btn-outline-success" href="#!">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                        </a>
+                    {% else %}
+                        <a class="btn btn-outline-danger" href="#!">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>    
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     <a class="btn btn-outline-primary" href="/connector/edit/{{connector.get_id()}}">
                         <i class="fa fa-pencil-alt" aria-hidden="true"></i>

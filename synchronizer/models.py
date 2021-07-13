@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
-from synchronizer.utils import AESCipher, DateAndTime
+from synchronizer.utils import AESCipher, DateAndTime, validate_connector
 
 lm = LoginManager()
 db = SQLAlchemy()
@@ -396,6 +396,15 @@ class Connector(db.Model):
     )
 
     @property
+    def is_valid(self):
+        return validate_connector(
+            server=self.server,
+            login=self.login,
+            api_token=self.api_token,
+            connector_type=self.connector_type.name,
+        )
+
+    @property
     def password(self):
         return aes.decrypt(self._password)
 
@@ -420,14 +429,18 @@ class Connector(db.Model):
     def __repr__(self):
         return self.name
 
-    @staticmethod
-    def create(**kwargs):
+    @classmethod
+    def create(cls, with_commit=True, **kwargs):
         """
         Returns new connector
         """
-        c = Connector(**kwargs)
+        c = cls(**kwargs)
+
         db.session.add(c)
-        db.session.commit()
+
+        if with_commit:
+            db.session.commit()
+
         return c
 
     @classmethod
