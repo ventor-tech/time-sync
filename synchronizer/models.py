@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from synchronizer.connectors.base import ExportException
 from synchronizer.connectors.manager import ConnectorManager
-from synchronizer.utils import AESCipher, DateAndTime, validate_connector
+from synchronizer.utils import AESCipher, DateAndTime
 
 lm = LoginManager()
 db = SQLAlchemy()
@@ -397,7 +397,8 @@ class Connector(db.Model):
 
     @property
     def is_valid(self):
-        return validate_connector(
+        connector = ConnectorManager.get_connector(self.connector_type.name)
+        return connector.validate_connector(
             server=self.server,
             login=self.login,
             api_token=self.api_token,

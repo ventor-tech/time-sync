@@ -2,11 +2,11 @@
 
 from flask import Blueprint, abort, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
-from synchronizer.utils import validate_connector
 from synchronizer.models import ConnectorType
 
 from synchronizer.forms import ConnectorForm, SyncForm, UserForm, WorklogForm
 from synchronizer.models import Connector, Synchronization, User, Worklog, db, lm
+from synchronizer.connectors.manager import ConnectorManager
 
 
 app_routes = Blueprint(
@@ -98,8 +98,9 @@ def add_connector():
     form = ConnectorForm()
     if form.validate_on_submit():
         connector_type = ConnectorType.query.get(form.connector_type.raw_data[0])
+        connector = ConnectorManager.get_connector(connector_type.name)
 
-        if not validate_connector(
+        if not connector.validate_connector(
             server=form.server.data,
             login=form.login.data,
             api_token=form.api_token.data,

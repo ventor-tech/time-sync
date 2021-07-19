@@ -134,3 +134,19 @@ class JiraConnector(BaseConnector):
             for i in res['issues']
         ]
         return results
+
+    @staticmethod
+    def validate_connector(**kwargs):
+        if "jira" in kwargs["connector_type"].lower():
+            auth = requests.auth.HTTPBasicAuth(
+                kwargs['login'],
+                kwargs['api_token']
+            )
+
+            response = requests.request(
+                "GET",
+                "https://{0}/rest/api/2/myself".format(kwargs['server']),
+                auth=auth,
+            )
+
+            return response.status_code == 200
