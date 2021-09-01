@@ -396,6 +396,15 @@ class Connector(db.Model):
     )
 
     @property
+    def is_valid(self):
+        connector = ConnectorManager.get_connector(self.connector_type.name)
+        return connector.validate(
+            server=self.server,
+            login=self.login,
+            api_token=self.api_token,
+        )
+
+    @property
     def password(self):
         return aes.decrypt(self._password)
 
@@ -420,14 +429,18 @@ class Connector(db.Model):
     def __repr__(self):
         return self.name
 
-    @staticmethod
-    def create(**kwargs):
+    @classmethod
+    def create(cls, with_commit=True, **kwargs):
         """
         Returns new connector
         """
-        c = Connector(**kwargs)
+        c = cls(**kwargs)
+
         db.session.add(c)
-        db.session.commit()
+
+        if with_commit:
+            db.session.commit()
+
         return c
 
     @classmethod

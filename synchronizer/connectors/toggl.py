@@ -54,3 +54,19 @@ class TogglConnector(BaseConnector):
 
     def export_worklogs(self, worklogs):
         raise NotImplementedError('Export for Toggl is not implemented')
+
+
+    @staticmethod
+    def validate(**kwargs):
+        auth = requests.auth.HTTPBasicAuth(
+            kwargs["api_token"],
+            'api_token'
+        )
+
+        response = requests.request(
+            "GET",
+            "https://api.track.toggl.com/api/v8/me",
+            auth=auth,
+        )
+
+        return response.status_code == 200
