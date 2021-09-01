@@ -57,17 +57,16 @@ class TogglConnector(BaseConnector):
 
 
     @staticmethod
-    def validate_connector(**kwargs):
-        if "toggl" in kwargs["connector_type"].lower():
-            auth = requests.auth.HTTPBasicAuth(
-                kwargs["api_token"],
-                'api_token'
-            )
+    def validate(**kwargs):
+        auth = requests.auth.HTTPBasicAuth(
+            kwargs["api_token"],
+            'api_token'
+        )
 
-            response = requests.request(
-                "GET",
-                "https://api.track.toggl.com/api/v8/me",
-                auth=auth,
-            )
+        response = requests.request(
+            "GET",
+            "https://api.track.toggl.com/api/v8/me",
+            auth=auth,
+        )
 
-            return response.status_code == 200
+        return response.status_code == 200

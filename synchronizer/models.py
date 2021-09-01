@@ -398,11 +398,10 @@ class Connector(db.Model):
     @property
     def is_valid(self):
         connector = ConnectorManager.get_connector(self.connector_type.name)
-        return connector.validate_connector(
+        return connector.validate(
             server=self.server,
             login=self.login,
             api_token=self.api_token,
-            connector_type=self.connector_type.name,
         )
 
     @property

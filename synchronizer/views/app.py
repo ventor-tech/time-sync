@@ -100,11 +100,10 @@ def add_connector():
         connector_type = ConnectorType.query.get(form.connector_type.raw_data[0])
         connector = ConnectorManager.get_connector(connector_type.name)
 
-        if not connector.validate_connector(
+        if not connector.validate(
             server=form.server.data,
             login=form.login.data,
             api_token=form.api_token.data,
-            connector_type=connector_type.name,
         ):
             flash("Connector is not valid. Check spelling or correctness of fields and try again", "error")
             return redirect(url_for("app_routes.add_connector"))
