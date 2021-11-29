@@ -298,8 +298,24 @@ def run_sync():
             date_started_from=form.date_started_from.data,
             user_id=current_user.get_id()
         )
-        new_sync.import_worklogs()
-        new_sync.validate_worklogs()
+
+        try:
+            new_sync.import_worklogs()
+            new_sync.validate_worklogs()
+        except Exception as err:
+            # If something went wrong remove sync and render error page
+            Synchronization.delete(new_sync.id)
+
+            errors = (
+                f'Something went wrong: {err}'
+            )
+
+            return render_template(
+                "sync.html",
+                form=form,
+                title="Synchronize worklogs",
+                errors=errors
+            )
 
         return redirect(
             url_for(

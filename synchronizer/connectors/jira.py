@@ -34,7 +34,7 @@ class JiraConnector(BaseConnector):
         )
 
         # Catch wrong issue ID exceptions
-        if response.status_code == 404:
+        if response.status_code in (400, 404):
             raise WrongIssueIDException()
 
         response.raise_for_status()

@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
         default=datetime.utcnow
     )
 
-    issue_id_pattern = r'^\[((?P<cn>.*):)?(?P<issue_id>.*)\]\s*(?P<comment>.*)'
+    issue_id_pattern = r'^\[((?P<cn>.*?):)?(?P<issue_id>.*?)\]\s*(?P<comment>.*)'
 
     timezone_id = db.Column(
         db.Integer,

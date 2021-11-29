@@ -22,13 +22,9 @@
                 <td>{{connector.connector_type}}</td>
                 <td class="text-center">
                     {% if connector.is_valid %}
-                        <a class="btn btn-outline-success" href="#!">
-                            <i class="fa fa-check-square" aria-hidden="true"></i>
-                        </a>
+                            <i class="fa fa-check-square text-success" aria-hidden="true"></i>
                     {% else %}
-                        <a class="btn btn-outline-danger" href="#!">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                        </a>    
+                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
                     {% endif %}
                 </td>
                 <td class="text-center">
