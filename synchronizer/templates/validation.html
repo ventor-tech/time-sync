@@ -1,14 +1,14 @@
 {% extends "common/index.html" %}
 {% set active_page = "worklogs" %}
 {% block content %}
-<div class="container mt-4 mb-4">
+<div id="content" class="container mt-4 mb-4">
     <div class="card">
         <div class="card-header">
             Worklogs
         </div>
         <div class="card-body">
             {% if worklogs %}
-            <div class="alert alert-info"">The red ones will not be synchronized</div>         
+            <div class="alert alert-info">The red ones will not be synchronized</div>
             <table class=" table table-bordered table-hover" data-page-length="25" data-order="[[ 2, &quot;asc&quot; ]]">
                 <thead>
                     <tr>
@@ -100,6 +100,6 @@
             </div>
         </div>
         <a class="btn btn-outline-secondary mt-4" href="/cancel/{{sync_id}}">Cancel synchronization</a>
-        <a class="btn btn-outline-primary mt-4" href="/export/{{sync_id}}">Save worklogs</a>
+        <a class="btn btn-outline-primary mt-4" href="/export/{{sync_id}}" onclick="loading();">Save worklogs</a>
     </div>
     {% endblock %}
