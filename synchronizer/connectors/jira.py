@@ -117,10 +117,10 @@ class JiraConnector(BaseConnector):
             ...
         ]
         """
-        search_condition = 'summary ~ "{0}"'
+        search_condition = 'summary ~ "{0}*"'
 
         # If possible match with issue keys append additional condition
-        if re.search(r'(?:\s|^)([A-Z]+-[0-9]+)(?=\s|$)', term.upper()):
+        if re.search(r'(?:\s|^)([A-Z0-9]+-[0-9]+)(?=\s|$)', term.upper()):
             search_condition += ' OR id = "{0}"'
 
         res = self._get(
