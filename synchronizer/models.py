@@ -142,7 +142,7 @@ class Worklog(db.Model):
     comment = db.Column(db.String(2000))
     source_id = db.Column(db.String(128))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    issue_id = db.Column(db.String(32), default='')
+    issue_id = db.Column(db.String(128), default='')
 
     parent_id = db.Column(
         db.Integer,
@@ -376,7 +376,7 @@ class Connector(db.Model):
     server = db.Column(db.String(128), default="")
     login = db.Column(db.String(64), default="")
     _password = db.Column('password', db.String(64), default="")
-    _api_token = db.Column('api_token', db.String(172), default="")
+    _api_token = db.Column('api_token', db.String(512), default="")
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
