@@ -308,9 +308,11 @@ class Worklog(db.Model):
         ).first()
 
         if existing_worklog:
+            # Uncomment code below to additionally check by duration
             # If duration the same - exists
-            if worklog['duration'] == existing_worklog.duration:
-                return True
+            # if worklog['duration'] == existing_worklog.duration:
+            #     return True
+            return True
         return False
 
     @staticmethod
