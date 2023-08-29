@@ -26,7 +26,7 @@ def create_app(dev=False):
     from synchronizer.models import lm, db, migrate
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, compare_type=True)
 
     @app.context_processor
     def helpers():

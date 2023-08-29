@@ -21,13 +21,13 @@ class ProdConfiguration(object):
     """
     Class with different config variables
     """
-    SECRET_KEY = 'AhEsDfsje2KH57E'
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'AhEsDfsje2KH57E')
     DEV = False
     DEBUG = False
 
     ALLOWED_REGISTRATION_DOMAINS = ['ventor.tech', ]
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'  # NOQA
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres:postgres@localhost/time')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     OAUTH_CREDENTIALS = {
@@ -42,20 +42,17 @@ class DevConfiguration(Configuration):
     """
     Class with different config variables
     """
-    SECRET_KEY = 'hello_world'
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'AhEsDfsje2KH57E')
     DEV = True
     DEBUG = True
 
     ALLOWED_REGISTRATION_DOMAINS = ['ventor.tech', ]
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/time'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres:postgres@localhost/time')
 
     OAUTH_CREDENTIALS = {
         'google': {
-            'id': (
-                '213737460043-j645q79uk648f4kekcdf7j026c3veqan'
-                '.apps.googleusercontent.com'
-            ),
-            'secret': 'AcIwMNvJfCe-g0LvoCPm5YJs'
+            'id': os.environ.get('GOOGLE_OAUTH_ID'),
+            'secret': os.environ.get('GOOGLE_OAUTH_SECRET')
         }
     }

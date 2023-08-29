@@ -11,6 +11,7 @@ $(function () {
             url: '/api/issues',
             dataType: 'json',
             method: 'GET',
+            delay: 250,
             data: function (params) {
                 let query = {
                     term: params.term,
@@ -30,3 +31,8 @@ $(function () {
         });
     });
 });
+
+function loading () {
+    $("#loading").show();
+    $("#content").hide();
+}
