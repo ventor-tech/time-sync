@@ -1,34 +1,32 @@
 .center-both {
-    position:absolute;
-	top:calc(40% + 55px);
-	left:50%;
-	transform:translate(-50%,-40%);
-	min-width: 300px;
-	padding-bottom: 10px;
+    position: absolute;
+    top: calc(40% + 55px);
+    left: 50%;
+    transform: translate(-50%, -40%);
+    min-width: 300px;
+    padding-bottom: 10px;
 }
 
 .oauth-provider-logo {
-	height: 25px;
-	margin-left: 3px;
+    height: 25px;
+    margin-left: 3px;
 }
 
 
 /* HELP */
 .help-image {
-	display: block;
-	max-width: 90%;
-	margin: 1rem auto;
-	border: 1px solid #ddd;
+    display: block;
+    max-width: 90%;
+    margin: 1rem auto;
+    border: 1px solid #ddd;
 }
 
 #loading {
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	background: url(/static/ajax-loader.gif) 50% 50% no-repeat rgb(249,249,249);
-    display: none;
-    cursor: wait;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 111;
+    background: #ffffff;
 }

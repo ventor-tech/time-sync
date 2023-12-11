@@ -67,8 +67,12 @@
                         <div class="invalid-feedback" style="display:block">{{ error }}</div>
                     {% endfor %}
                 </div>
-                            
-                <button type="submit" class="btn btn-primary d-block mx-auto" onclick="loading();">Save</button>
+
+                {% if errors %}
+                    <button type="submit" class="btn btn-primary d-block mx-auto" disabled="true">Save</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary d-block mx-auto" onclick="loading();">Save</button>
+                {% endif %}
             </form>
         {% endif %}
 	</div>

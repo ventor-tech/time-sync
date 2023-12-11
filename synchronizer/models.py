@@ -1,5 +1,7 @@
 import os
 import re
+
+from collections import OrderedDict
 from datetime import datetime
 
 from flask import current_app
@@ -206,7 +208,6 @@ class Worklog(db.Model):
         raw_worklogs.sort(key=lambda rw: rw['date_started'])
 
         # Split list of worklogs to groups by date and comment
-        from collections import OrderedDict
         grouped_worklogs = OrderedDict()
 
         # Preprocess and group worklogs

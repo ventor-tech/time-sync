@@ -207,12 +207,17 @@ def edit_worklog(worklog_id):
     form.issue_id.choices = [(w.issue_id, w.issue_id)]
 
     if form.validate_on_submit():
-        # Save a new synchronization
         w.comment = form.comment.data
         w.issue_id = form.issue_id.data
 
         # Mark as valid when both comment and issue_id presented
         w.is_valid = bool(form.comment.data and form.issue_id.data)
+
+        # Update children worklogs if any
+        for child in w.children:
+            child.comment = w.comment
+            child.issue_id = w.issue_id
+            child.is_valid = w.is_valid
 
         db.session.add(w)
         db.session.commit()

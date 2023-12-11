@@ -44,7 +44,12 @@
         {% endwith %}
     {% endblock %}
 
-    <div id="loading"></div>
+    <div id="loading" class="d-flex justify-content-center align-items-center w-100 h-100" style="display: none !important;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="ml-2">Please wait. Do not update or close this page.</div>
+    </div>
     {% block content %}{% endblock %}
 </div>
 
