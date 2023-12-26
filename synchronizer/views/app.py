@@ -291,7 +291,7 @@ def run_sync():
 
     if form.validate_on_submit():
         if not form.source.data or not form.target.data:
-            errors = 'Please select source and/or target connectors!'
+            errors = 'Please select source and target connectors!'
             return render_template(
                 "sync.html",
                 form=form,
@@ -314,9 +314,7 @@ def run_sync():
             # If something went wrong remove sync and render error page
             Synchronization.delete(new_sync.id)
 
-            errors = (
-                f'Something went wrong: {err}'
-            )
+            errors = str(err)
 
             return render_template(
                 "sync.html",
@@ -342,8 +340,11 @@ def run_sync():
     if unfinished_syncs:
         errors = (
             'There are unfinished synchronizations that could include '
-            'worklogs to sychronize! Please check it on '
-            '<a href="/synchronizations">Synchronization</a> tab'
+            'worklogs to sychronize! You won\'t be able to synchronize these worklogs until '
+            'the synchronizations will be cancelled or removed. Please check them on '
+            '<a href="/synchronizations" target="_blank">Synchronization</a> page.'
+            '<br /><br />'
+            'After fixing this issue you can start new synchronization.'
         )
 
     return render_template(

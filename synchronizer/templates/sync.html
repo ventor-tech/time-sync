@@ -13,6 +13,7 @@
         
         {% if errors %}
             <div class="alert alert-danger" role="alert">
+                <h5>Something went wrong! :(</h5>
                 {{ errors|safe }}
             </div>
         {% endif %}
@@ -68,10 +69,10 @@
                     {% endfor %}
                 </div>
 
-                {% if errors %}
-                    <button type="submit" class="btn btn-primary d-block mx-auto" disabled="true">Save</button>
+                {% if errors and "unfinished synchronizations" in errors %}
+                    <button type="submit" class="btn btn-primary d-block mx-auto" disabled="true">Load Worklogs</button>
                 {% else %}
-                    <button type="submit" class="btn btn-primary d-block mx-auto" onclick="loading();">Save</button>
+                    <button type="submit" class="btn btn-primary d-block mx-auto" onclick="loading();">Load Worklogs</button>
                 {% endif %}
             </form>
         {% endif %}
