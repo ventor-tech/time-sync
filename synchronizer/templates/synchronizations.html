@@ -23,10 +23,14 @@
             {{title}}
         </div>
         <div class="card-body">
-            <p class="font-weight-bold">
-                Take a look at yellow rows.
-                These rows are invalid synchronizations that need to be completed or deleted.
-            </p>
+            {% if incompleted_synchronizations %}
+            <div class="alert alert-warning">
+                <p class="font-weight-bold">
+                    Take a look at yellow rows.
+                    These rows are invalid synchronizations that need to be completed or deleted.
+                </p>
+            </div>
+            {% endif %}
             {% if synchronizations %}                
             <table class="table table-bordered table-hover" data-order="[[ 1, &quot;asc&quot; ]]">
                 <thead>

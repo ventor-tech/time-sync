@@ -247,9 +247,12 @@ def get_synchronizations():
     synchronizations = Synchronization.query.filter_by(
         user_id=current_user.get_id()
     ).order_by(Synchronization.date_created).all()
+
     return render_template(
         "synchronizations.html",
         synchronizations=synchronizations,
+        incompleted_synchronizations=any([
+            s for s in synchronizations if not s.is_completed and not s.is_cancelled]),
         title="My Synchronizations"
     )
 
