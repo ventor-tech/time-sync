@@ -26,13 +26,13 @@
             {% if incompleted_synchronizations %}
             <div class="alert alert-warning">
                 <p class="font-weight-bold">
-                    Take a look at yellow rows.
+                    <h5 class="font-weight-bold">Take a look at yellow rows.</h5>
                     These rows are invalid synchronizations that need to be completed or deleted.
                 </p>
             </div>
             {% endif %}
             {% if synchronizations %}                
-            <table class="table table-bordered table-hover" data-order="[[ 1, &quot;asc&quot; ]]">
+            <table class="table table-bordered table-hover" data-order="[[ 1, &quot;desc&quot; ]]">
                 <thead>
                     <tr>
                         <th>#</th>
