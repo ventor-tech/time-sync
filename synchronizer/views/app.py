@@ -174,7 +174,7 @@ def get_worklogs():
     worklogs = Worklog.query.filter(
         Worklog.user_id == current_user.get_id(),
         Worklog.parent_id == None  # NOQA
-    ).order_by(Worklog.date_started).all()
+    ).order_by(Worklog.date_started).limit(1000).all()
     return render_template(
         "worklogs.html",
         worklogs=worklogs,
