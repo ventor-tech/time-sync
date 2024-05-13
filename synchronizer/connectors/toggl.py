@@ -17,7 +17,7 @@ class TogglConnector(BaseConnector):
     def _api(self, method, endpoint, data=None, params=None):
         response = requests.request(
             method,
-            'https://api.track.toggl.com/api/v8/{0}'.format(endpoint),
+            'https://api.track.toggl.com/api/v9/me/{0}'.format(endpoint),
             json=data,
             auth=self.auth,
             params=params
@@ -33,8 +33,9 @@ class TogglConnector(BaseConnector):
 
     def import_worklogs(self, start_date, end_date):
         params = {
-            'start_date': start_date,
-            'end_date': end_date
+            # Only date part is needed
+            'start_date': start_date[:10],
+            'end_date': end_date[:10]
         }
         resp = self._get('time_entries', params=params)
         # filter duration less than zero for currently running time entries
@@ -65,7 +66,7 @@ class TogglConnector(BaseConnector):
 
         response = requests.request(
             "GET",
-            "https://api.track.toggl.com/api/v8/me",
+            "https://api.track.toggl.com/api/v9/me",
             auth=auth,
         )
 
