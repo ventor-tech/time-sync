@@ -2,7 +2,7 @@ import os
 import re
 
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import current_app
 from flask_login import LoginManager, UserMixin, current_user
@@ -587,7 +587,10 @@ class Synchronization(db.Model):
             ).localize(
                 self.date_started_from
             ).isoformat('T'),
-            DateAndTime(current_user.timezone.name).now().isoformat('T')
+            (
+                # Added 1 day due to limitation of new Toggl API
+                DateAndTime(current_user.timezone.name).now() + timedelta(days=1)
+            ).isoformat('T')
         )
 
         Worklog.create_all(
